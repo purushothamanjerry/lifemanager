@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: '/api' });
+const rawApiUrl = import.meta.env.VITE_API_URL;
+const baseURL = rawApiUrl 
+  ? (rawApiUrl.endsWith('/api') ? rawApiUrl : rawApiUrl.replace(/\/$/, '') + '/api') 
+  : '/api';
+const API = axios.create({ baseURL });
 
 export const peopleApi = {
   getAll:   ()         => API.get('/people'),

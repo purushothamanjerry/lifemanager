@@ -4,6 +4,8 @@ import { profileApi } from '../utils/api.js';
 import { useNavigate } from 'react-router-dom';
 import './Profile.css';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 // ─── Helpers ───────────────────────────────────────────────────────────────
 const calcAge = dob => {
   try { return differenceInYears(new Date(), parseISO(dob)); }
@@ -321,7 +323,7 @@ export default function Profile({ theme: appTheme, onThemeChange }) {
               {/* Photo */}
               <div className="hero-photo-wrap">
                 <div className="hero-photo"
-                  style={hasPhoto ? { backgroundImage: `url(http://localhost:5000${profile.profilePhoto})` } : {}}>
+                  style={hasPhoto ? { backgroundImage: `url(${API_URL}${profile.profilePhoto})` } : {}}>
                   {!hasPhoto && <span className="hero-photo-initial">
                     {(form.fullName||form.nickname||'?')[0]?.toUpperCase()}
                   </span>}

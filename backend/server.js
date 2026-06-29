@@ -1,11 +1,11 @@
-const express  = require('express');
+const express = require('express');
 const mongoose = require('mongoose');
-const cors     = require('cors');
-const path     = require('path');
+const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
-const PORT      = 5001; // hardcoded — do not use env var so it never falls back to 5000
+const PORT = 5001; // hardcoded — do not use env var so it never falls back to 5000
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/life-manager';
 
 app.use(cors({ origin: ['http://localhost:3002', 'http://127.0.0.1:3002'] }));
@@ -14,15 +14,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ── Routes ────────────────────────────────────────────────────────
-app.use('/api/people',        require('./routes/people'));
+app.use('/api/people', require('./routes/people'));
 app.use('/api/conversations', require('./routes/conversations'));
-app.use('/api/notes',         require('./routes/notes'));
-app.use('/api/memories',      require('./routes/memories'));
-app.use('/api/plans',         require('./routes/plans'));
-app.use('/api/finance',       require('./routes/finance'));
-app.use('/api/profile',       require('./routes/profile'));
-app.use('/api/activities',    require('./routes/activities'));
-app.use('/api/health',        require('./routes/health'));
+app.use('/api/notes', require('./routes/notes'));
+app.use('/api/memories', require('./routes/memories'));
+app.use('/api/plans', require('./routes/plans'));
+app.use('/api/finance', require('./routes/finance'));
+app.use('/api/profile', require('./routes/profile'));
+app.use('/api/activities', require('./routes/activities'));
+app.use('/api/health', require('./routes/health'));
 
 // Server ping
 app.get('/api/ping', (req, res) => res.json({ status: 'ok', timestamp: new Date() }));
