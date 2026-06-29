@@ -328,7 +328,7 @@ function MemoryCard({ memory, onEdit, onDelete, onFav, onTagClick, onPersonFilte
 
       <div className="mem-card-body">
         <div className="mem-card-date-row">
-          <span className="mem-card-date">{format(new Date(memory.date),'MMM d, yyyy')}</span>
+          <span className="mem-card-date">{memory.date && !isNaN(new Date(memory.date)) ? format(new Date(memory.date),'MMM d, yyyy') : 'Unknown Date'}</span>
           {memory.place&&<span className="mem-card-place">📍 {memory.place}</span>}
         </div>
         <div className="mem-card-title">{memory.title}</div>
@@ -368,7 +368,7 @@ function MemoryCard({ memory, onEdit, onDelete, onFav, onTagClick, onPersonFilte
       </div>
 
       <div className="mem-card-footer" onClick={e=>e.stopPropagation()}>
-        <span className="mem-card-ago">{formatDistanceToNow(new Date(memory.date),{addSuffix:true})}</span>
+        <span className="mem-card-ago">{memory.date && !isNaN(new Date(memory.date)) ? formatDistanceToNow(new Date(memory.date),{addSuffix:true}) : ''}</span>
         <div className="mem-card-actions">
           <button className="mca-btn" onClick={e=>{e.stopPropagation();onFav(memory);}}>{memory.isFavorite?'⭐':'☆'}</button>
           {confirmDel
@@ -387,8 +387,9 @@ function MemoryCard({ memory, onEdit, onDelete, onFav, onTagClick, onPersonFilte
 function TimelineView({ memories, onEdit, onTagClick }) {
   const grouped = {};
   memories.forEach(m => {
-    const year = new Date(m.date).getFullYear();
-    const mon  = format(new Date(m.date), 'MMMM yyyy');
+    const d = m.date && !isNaN(new Date(m.date)) ? new Date(m.date) : new Date();
+    const year = d.getFullYear();
+    const mon  = format(d, 'MMMM yyyy');
     if (!grouped[year]) grouped[year] = {};
     if (!grouped[year][mon]) grouped[year][mon] = [];
     grouped[year][mon].push(m);
@@ -417,7 +418,7 @@ function TimelineView({ memories, onEdit, onTagClick }) {
                         {cover&&<div className="tl-card-thumb"><img src={cover} alt={m.title}/></div>}
                         <div className="tl-card-content">
                           <div className="tl-card-top">
-                            <span className="tl-card-date">{format(new Date(m.date),'EEEE, d MMM')}</span>
+                            <span className="tl-card-date">{m.date && !isNaN(new Date(m.date)) ? format(new Date(m.date),'EEEE, d MMM') : 'Unknown Date'}</span>
                             {m.place&&<span className="tl-card-place">📍 {m.place}</span>}
                             {m.isFavorite&&<span style={{fontSize:'0.85rem'}}>⭐</span>}
                           </div>
