@@ -5,31 +5,10 @@ const path     = require('path');
 require('dotenv').config();
 
 const app = express();
-const PORT      = process.env.PORT || 5001;
-const MONGO_URI = process.env.MONGO_URI;
+const PORT      = 5001; // hardcoded — do not use env var so it never falls back to 5000
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/life-manager';
 
-if (!MONGO_URI) {
-  console.error('❌ MONGO_URI environment variable is not set!');
-  process.exit(1);
-}
-
-// ── CORS ──────────────────────────────────────────────────────────
-const allowedOrigins = process.env.FRONTEND_URL
-  ? [process.env.FRONTEND_URL, 'http://localhost:3002']
-  : ['http://localhost:3002', 'http://127.0.0.1:3002'];
-
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, curl, etc.)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.some(o => origin.startsWith(o))) {
-      return callback(null, true);
-    }
-    callback(new Error('Not allowed by CORS'));
-  },
-  credentials: true,
-}));
-
+app.use(cors({ origin: ['http://localhost:3002', 'http://127.0.0.1:3002'] }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -45,7 +24,7 @@ app.use('/api/profile',       require('./routes/profile'));
 app.use('/api/activities',    require('./routes/activities'));
 app.use('/api/health',        require('./routes/health'));
 
-// Server ping / health check (Render uses this to confirm app is up)
+// Server ping
 app.get('/api/ping', (req, res) => res.json({ status: 'ok', timestamp: new Date() }));
 
 // ── Global error handler ──────────────────────────────────────────
@@ -57,12 +36,16 @@ app.use((err, req, res, next) => {
 // ── Start ─────────────────────────────────────────────────────────
 mongoose.connect(MONGO_URI)
   .then(() => {
-    console.log('✅ MongoDB connected');
+    console.log('✅ MongoDB connected to', MONGO_URI);
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
+      console.log('');
+      console.log('🚀 Server running on http://localhost:' + PORT);
+      console.log('   Press Ctrl+C to stop.');
+      console.log('');
     });
   })
   .catch(err => {
     console.error('❌ MongoDB connection error:', err.message);
+    console.error('   Make sure MongoDB is running: mongod --dbpath C:\\data\\db');
     process.exit(1);
   });

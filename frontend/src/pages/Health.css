@@ -1,0 +1,517 @@
+/* ═══════════════════════════════════════════════════════
+   HEALTH PAGE
+═══════════════════════════════════════════════════════ */
+.health-page { padding: 36px 40px; max-width: 1100px; min-height: 100vh; }
+
+.health-header {
+  display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px;
+}
+.health-header h1 { margin-bottom: 3px; }
+.health-header p  { color: var(--text-3); font-size: 0.82rem; }
+
+/* ── Tabs ── */
+.health-tabs { display: flex; border-bottom: 1px solid var(--border-dim); margin-bottom: 24px; }
+.health-tab {
+  padding: 10px 18px; background: transparent; border: none;
+  font-family: var(--font-body); font-size: 0.85rem; font-weight: 600;
+  color: var(--text-3); cursor: pointer; transition: all 0.2s;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+}
+.health-tab:hover  { color: var(--text-1); }
+.health-tab.active { color: var(--rose); border-bottom-color: var(--rose); }
+.health-loading { display: flex; justify-content: center; padding: 80px; }
+
+/* ── Day Navigator ── */
+.day-nav {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 20px;
+}
+.dn-btn {
+  width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg-elevated); color: var(--text-2); font-size: 1.3rem;
+  cursor: pointer; transition: all 0.18s; display: flex; align-items: center; justify-content: center;
+}
+.dn-btn:hover:not(:disabled) { border-color: var(--rose); color: var(--rose); }
+.dn-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.dn-mid { display: flex; align-items: center; gap: 10px; flex: 1; }
+.dn-label { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; }
+
+/* ── No log state ── */
+.no-log {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 60px 24px; text-align: center;
+}
+.no-log-icon { font-size: 3rem; color: var(--rose); opacity: 0.2; margin-bottom: 20px; font-family: var(--font-display); }
+
+/* ── Day View (summary) ── */
+.dv-stats {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px;
+}
+.dv-stat {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; background: var(--bg-card); border: 1px solid var(--border-dim);
+  border-radius: var(--radius); min-width: 130px;
+  animation: fadeUp 0.3s ease forwards; opacity: 0;
+}
+.dv-si { font-size: 1.4rem; }
+.dv-sv { font-family: var(--font-display); font-size: 1rem; font-weight: 700; line-height: 1; }
+.dv-sl { font-size: 0.65rem; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 2px; }
+
+.dv-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.dv-badge {
+  padding: 4px 12px; background: var(--bg-elevated); border: 1px solid var(--border-dim);
+  border-radius: 20px; font-size: 0.78rem; font-weight: 600; color: var(--text-2);
+  text-transform: capitalize;
+}
+.dv-notes {
+  padding: 10px 14px; background: var(--bg-card); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-sm); font-size: 0.85rem; color: var(--text-2);
+  margin-bottom: 16px; font-style: italic;
+}
+
+/* ── Food section ── */
+.dv-food { margin-top: 4px; }
+.dv-food-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.dv-food-title { font-family: var(--font-display); font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+.dv-total-cal {
+  font-size: 0.72rem; font-weight: 700; color: var(--amber);
+  background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.2);
+  padding: 2px 8px; border-radius: 6px;
+}
+.dv-meal { margin-bottom: 12px; }
+.dv-meal-hdr {
+  font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;
+}
+.dv-meal-cal { font-size: 0.68rem; color: var(--text-3); margin-left: auto; font-weight: 600; }
+
+/* ── Food Row ── */
+.food-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 6px; border-radius: var(--radius-sm); transition: background 0.15s;
+}
+.food-row:hover { background: var(--bg-elevated); }
+.food-icon { font-size: 1rem; width: 24px; text-align: center; }
+.food-main { flex: 1; }
+.food-name { font-size: 0.875rem; font-weight: 600; color: var(--text-1); }
+.food-meta { display: block; font-size: 0.7rem; color: var(--text-3); }
+.food-cal  { font-size: 0.78rem; font-weight: 700; color: var(--amber); flex-shrink: 0; }
+.food-del  { display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s; }
+.food-row:hover .food-del { opacity: 1; }
+.fa-btn {
+  width: 26px; height: 26px; border-radius: 6px; border: 1px solid transparent;
+  background: transparent; cursor: pointer; font-size: 0.72rem; color: var(--text-3);
+  display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+}
+.fa-ok:hover { color: var(--rose); }
+.fa-x:hover  { color: var(--rose); background: var(--rose-dim); border-color: var(--rose); }
+
+/* ── Add Food Form ── */
+.add-food-form {
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px; margin-bottom: 12px;
+  animation: fadeUp 0.2s ease;
+}
+.aff-meals { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+.aff-mt {
+  padding: 5px 10px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg-card); cursor: pointer; font-family: var(--font-body);
+  font-size: 0.72rem; font-weight: 600; color: var(--text-2); transition: all 0.18s;
+  display: flex; align-items: center; gap: 4px;
+}
+.aff-mt:hover { border-color: var(--border-bright); }
+.aff-fields { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.aff-inp  { flex: 1; min-width: 160px; }
+.aff-sm   { flex: 0 1 90px; min-width: 70px; }
+.aff-btns { display: flex; gap: 8px; justify-content: flex-end; }
+
+/* ── Day Log Form ── */
+.daylog-form { display: flex; flex-direction: column; gap: 0; }
+.dlf-sec {
+  padding: 16px 0; border-bottom: 1px solid var(--border-dim);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.dlf-sec:last-of-type { border-bottom: none; }
+.dlf-sec-title { font-family: var(--font-display); font-size: 0.9rem; font-weight: 700; color: var(--text-1); }
+.dlf-g3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+.dlf-g4 { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+
+.dlf-bmi-display { display: flex; align-items: baseline; gap: 8px; padding: 10px 14px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.dlf-bmi-val { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; }
+.dlf-bmi-cat { font-size: 0.7rem; font-weight: 700; }
+
+.chip-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip {
+  padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border);
+  background: var(--bg-elevated); cursor: pointer; font-family: var(--font-body);
+  font-size: 0.78rem; font-weight: 600; color: var(--text-2); transition: all 0.18s;
+}
+.chip:hover { border-color: var(--border-bright); }
+
+.workout-toggle {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px; border-radius: var(--radius); border: 1px solid var(--border);
+  background: var(--bg-elevated); cursor: pointer; font-family: var(--font-body);
+  font-size: 0.85rem; font-weight: 600; color: var(--text-2); transition: all 0.2s;
+}
+.workout-toggle.on { border-color: var(--teal); background: rgba(78,201,176,0.1); color: var(--teal); }
+.wt-dot { font-size: 1rem; }
+
+.water-quick { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.water-chip {
+  padding: 4px 10px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg-elevated); cursor: pointer; font-size: 0.72rem; font-weight: 700;
+  color: var(--text-3); transition: all 0.18s;
+}
+.water-chip.lit { border-color: var(--blue); background: rgba(96,165,250,0.12); color: var(--blue); }
+.water-chip:hover { border-color: var(--blue); }
+
+.mood-picker { display: flex; gap: 8px; }
+.mood-btn {
+  width: 44px; height: 44px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--bg-elevated); cursor: pointer; font-size: 1.4rem;
+  display: flex; align-items: center; justify-content: center; transition: all 0.18s;
+}
+.mood-btn:hover  { border-color: var(--border-bright); transform: scale(1.1); }
+.mood-btn.active { transform: scale(1.15); }
+
+.dlf-footer { display: flex; gap: 10px; justify-content: flex-end; padding-top: 16px; }
+
+/* ── Weight tab ── */
+.w-stat-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 16px; }
+.wsc { background: var(--bg-card); border: 1px solid var(--border-dim); border-radius: var(--radius); padding: 16px; }
+.wsc-lab { font-size: 0.68rem; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+.wsc-val { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; line-height: 1; }
+.wsc-sub { font-size: 0.7rem; font-weight: 700; margin-top: 4px; }
+
+.range-row { display: flex; gap: 6px; margin-bottom: 16px; }
+.range-row.compact { margin-bottom: 0; }
+.rng-btn {
+  padding: 5px 12px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg-elevated); color: var(--text-3); font-family: var(--font-body);
+  font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.18s;
+}
+.rng-btn:hover { border-color: var(--rose); color: var(--rose); }
+.rng-btn.active { border-color: var(--rose); background: rgba(232,99,122,0.12); color: var(--rose); }
+
+/* Weight chart */
+.hchart-wrap { position: relative; width: 100%; }
+.hchart-svg  { width: 100%; height: 160px; display: block; }
+.hchart-trend-badge {
+  position: absolute; top: 4px; right: 0;
+  font-size: 0.8rem; font-weight: 700; background: var(--bg-elevated);
+  border: 1px solid var(--border-dim); padding: 2px 10px; border-radius: 8px;
+}
+.hchart-dates {
+  display: flex; justify-content: space-between;
+  font-size: 0.65rem; color: var(--text-3); margin-top: 4px;
+}
+.hchart-empty { font-size: 0.82rem; color: var(--text-3); padding: 24px 0; }
+.hchart-avg   { font-size: 0.72rem; color: var(--text-3); margin-top: 6px; font-weight: 600; }
+
+/* Weight log table */
+.wlog-hdr, .wlog-row {
+  display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; padding: 8px;
+  border-bottom: 1px solid var(--border-dim);
+}
+.wlog-hdr { font-size: 0.65rem; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; }
+.wlog-row { font-size: 0.82rem; transition: background 0.15s; }
+.wlog-row:hover { background: var(--bg-elevated); border-radius: 6px; }
+
+/* Mini bar chart */
+.mini-bar-chart { display: flex; align-items: flex-end; gap: 3px; overflow: hidden; }
+.mbc-col  { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 0; }
+.mbc-bar  { width: 100%; border-radius: 2px 2px 0 0; min-height: 2px; transition: height 0.5s ease; }
+.mbc-label{ font-size: 0.55rem; color: var(--text-3); }
+
+/* ── Food History ── */
+.meal-breakdown { display: flex; flex-direction: column; gap: 10px; }
+.mb-row { display: grid; grid-template-columns: 24px 90px 1fr 36px 60px; align-items: center; gap: 8px; }
+.mb-lab { font-size: 0.78rem; font-weight: 600; color: var(--text-2); }
+.mb-track { height: 6px; background: var(--bg-elevated); border-radius: 3px; overflow: hidden; }
+.mb-fill  { height: 100%; border-radius: 3px; transition: width 0.5s; }
+.mb-pct   { font-size: 0.68rem; color: var(--text-3); text-align: right; font-weight: 700; }
+.mb-cal   { font-size: 0.75rem; font-weight: 700; color: var(--text-2); text-align: right; }
+
+.fh-day { margin-bottom: 16px; }
+.fh-day-hdr { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-dim); margin-bottom: 4px; font-size: 0.75rem; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.07em; }
+.fh-row { display: grid; grid-template-columns: 24px 1fr 70px 70px; align-items: center; gap: 8px; padding: 6px 4px; border-radius: 6px; transition: background 0.15s; }
+.fh-row:hover { background: var(--bg-elevated); }
+.fh-nm  { font-size: 0.85rem; font-weight: 600; }
+.fh-ml  { font-size: 0.7rem; font-weight: 600; }
+.fh-cl  { font-size: 0.78rem; font-weight: 700; color: var(--amber); text-align: right; }
+
+/* ── Analytics ── */
+.an-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 16px; }
+.an-stat {
+  background: var(--bg-card); border: 1px solid var(--border-dim); border-radius: var(--radius);
+  padding: 14px 16px; text-align: center;
+  animation: fadeUp 0.3s ease forwards; opacity: 0;
+}
+.an-sv { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.an-sl { font-size: 0.65rem; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; }
+
+.an-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.mood-dist { display: flex; flex-direction: column; gap: 8px; }
+.md-row  { display: grid; grid-template-columns: 24px 80px 1fr 36px; align-items: center; gap: 8px; }
+.md-lab  { font-size: 0.78rem; font-weight: 600; color: var(--text-2); text-transform: capitalize; }
+.md-track{ height: 8px; background: var(--bg-elevated); border-radius: 4px; overflow: hidden; }
+.md-cnt  { font-size: 0.7rem; font-weight: 700; color: var(--text-3); text-align: right; }
+
+.wo-heatmap {
+  display: flex; flex-wrap: wrap; gap: 5px; padding: 8px 0; min-height: 50px;
+}
+.wo-dot {
+  width: 14px; height: 14px; border-radius: 3px;
+  background: var(--bg-elevated); border: 1px solid var(--border-dim);
+  transition: all 0.2s;
+}
+.wo-dot.on { background: var(--teal); border-color: var(--teal); }
+.wo-stat { font-size: 0.75rem; color: var(--text-3); margin-top: 8px; font-weight: 600; }
+
+/* ── Cards ── */
+.health-card {
+  background: var(--bg-card); border: 1px solid var(--border-dim);
+  border-radius: var(--radius); padding: 18px 20px;
+}
+.hcard-title { font-family: var(--font-display); font-size: 0.95rem; font-weight: 600; color: var(--text-1); margin-bottom: 14px; }
+.hcard-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.health-empty-sm { font-size: 0.82rem; color: var(--text-3); padding: 10px 0; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .health-page { padding: 20px 16px; }
+  .w-stat-row  { grid-template-columns: 1fr 1fr; }
+  .an-stats    { grid-template-columns: 1fr 1fr; }
+  .an-grid     { grid-template-columns: 1fr; }
+  .dlf-g3, .dlf-g4 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .dv-stats    { flex-direction: column; }
+  .w-stat-row  { grid-template-columns: 1fr 1fr; }
+  .mood-picker { gap: 5px; }
+  .mood-btn    { width: 38px; height: 38px; font-size: 1.2rem; }
+  .mb-row      { grid-template-columns: 24px 70px 1fr 32px 50px; }
+}
+/* ── Health.css ADDITIONS ────────────────────────────────────────────────────
+   Add these to the bottom of your existing Health.css
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* Header buttons group */
+.health-header-btns {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ── Quick Weight Log ──────────────────────────────────────────────────────── */
+.quick-weight-log {
+  background: var(--surface-2);
+  border: 1.5px solid var(--rose);
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+}
+.qwl-title {
+  font-size: 0.82rem;
+  color: var(--text-2);
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+.qwl-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.qwl-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.qwl-input {
+  width: 110px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--rose);
+  background: var(--surface-1);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 12px;
+  outline: none;
+}
+.qwl-input:focus { border-color: var(--rose); }
+.qwl-unit {
+  font-size: 1rem;
+  color: var(--text-2);
+  font-weight: 500;
+}
+.qwl-bmi {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.qwl-bmi-val {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-1);
+}
+.qwl-bmi-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.qwl-btns {
+  display: flex;
+  gap: 8px;
+}
+
+/* ── Weight form section ───────────────────────────────────────────────────── */
+.dlf-sec-weight {
+  background: color-mix(in srgb, var(--rose) 6%, var(--surface-2));
+  border: 1px solid color-mix(in srgb, var(--rose) 20%, transparent);
+  border-radius: 14px;
+}
+.dlf-weight-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+.dlf-height-display {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-1);
+  padding: 8px 0;
+}
+.dlf-height-hint {
+  font-size: 0.78rem;
+  color: var(--text-3);
+  margin-top: 8px;
+}
+
+/* ── Weight Stats ──────────────────────────────────────────────────────────── */
+.w-stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+@media (max-width: 640px) {
+  .w-stat-row { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── Weight log table enhancements ────────────────────────────────────────── */
+.hcard-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.wlog-date-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.wlog-date-pick {
+  font-size: 0.82rem;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 5px 8px;
+  color: var(--text-1);
+  outline: none;
+  cursor: pointer;
+}
+.wlog-date-pick:focus { border-color: var(--rose); }
+
+.wlog-today-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  background: var(--rose);
+  color: white;
+  border-radius: 4px;
+  padding: 1px 5px;
+  margin-left: 6px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+.wlog-gap-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  background: color-mix(in srgb, var(--amber) 20%, transparent);
+  color: var(--amber);
+  border-radius: 4px;
+  padding: 1px 5px;
+  margin-left: 6px;
+  font-weight: 500;
+  vertical-align: middle;
+}
+.wlog-row:hover {
+  background: var(--surface-2);
+  border-radius: 8px;
+}
+
+/* ── Weight velocity card ──────────────────────────────────────────────────── */
+.wv-card {}
+.wv-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.wv-stat {}
+.wv-val {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-1);
+}
+.wv-lab {
+  font-size: 0.75rem;
+  color: var(--text-3);
+  margin-top: 2px;
+}
+
+/* ── Chart enhancements ────────────────────────────────────────────────────── */
+.hchart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.hchart-trend-days {
+  font-size: 0.75rem;
+  color: var(--text-3);
+  margin-left: 4px;
+  font-weight: 400;
+}
+.hchart-range-info {
+  font-size: 0.78rem;
+  color: var(--text-3);
+}
+
+/* ── Daily log BMI inline ─────────────────────────────────────────────────── */
+.dv-bmi-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: var(--text-2);
+  padding: 8px 0 4px;
+}
+.dv-bmi-cat {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ── Analytics grid: weight chart full width ──────────────────────────────── */
+.an-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+@media (max-width: 600px) {
+  .an-grid { grid-template-columns: 1fr; }
+}
