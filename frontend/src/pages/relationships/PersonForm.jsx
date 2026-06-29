@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { peopleApi } from '../../utils/api.js';
+import { peopleApi, getImageUrl } from '../../utils/api.js';
 import ReactCrop, { centerCrop, makeAspectCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 
@@ -120,7 +120,7 @@ export default function PersonForm({ person, onClose, onSaved }) {
   const [crop, setCrop]                     = useState();
   const [completedCrop, setCompletedCrop]   = useState(null);
   const [croppedBlob, setCroppedBlob]       = useState(null);
-  const [photoPreview, setPhotoPreview]     = useState(person?.profilePhoto || null);
+  const [photoPreview, setPhotoPreview]     = useState(person?.profilePhoto ? getImageUrl(person.profilePhoto) : null);
 
   const [saving, setSaving] = useState(false);
   const [error, setError]   = useState('');

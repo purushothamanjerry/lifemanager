@@ -6,6 +6,17 @@ const baseURL = rawApiUrl
   : '/api';
 const API = axios.create({ baseURL });
 
+export const getImageUrl = (path) => {
+  if (!path) return '';
+  if (path.startsWith('http') || path.startsWith('data:')) return path;
+  if (rawApiUrl) {
+    const base = rawApiUrl.replace(/\/api\/?$/, '');
+    return `${base}${path.startsWith('/') ? '' : '/'}${path}`;
+  }
+  // In development, assume the vite proxy will handle it, or fallback to the same origin
+  return path.startsWith('/') ? path : `/${path}`;
+};
+
 export const peopleApi = {
   getAll:   ()         => API.get('/people'),
   getById:  (id)       => API.get(`/people/${id}`),

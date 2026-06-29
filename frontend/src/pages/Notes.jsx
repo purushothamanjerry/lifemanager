@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { link } from '../utils/links.js';
-import { notesApi, peopleApi } from '../utils/api.js';
+import { notesApi, peopleApi, getImageUrl } from '../utils/api.js';
 import { format, formatDistanceToNow } from 'date-fns';
 import './Notes.css';
 
@@ -211,7 +211,7 @@ function NoteEditor({ note, people, onSave, onCancel }) {
                   <button key={p._id} className="mention-option" onMouseDown={()=>selectSuggestion(p)}>
                     <div className="mention-opt-avatar">
                       {p.profilePhoto
-                        ? <img src={p.profilePhoto} alt={p.name}/>
+                        ? <img src={getImageUrl(p.profilePhoto)} alt={p.name}/>
                         : <div style={{background:`${col}22`,color:col}}>{getInitials(p.name)}</div>
                       }
                     </div>
@@ -315,7 +315,7 @@ function NoteCard({ note, onEdit, onDelete, onPin, onTagClick }) {
                 className="note-card-person" style={{background:`${col}15`,borderColor:`${col}30`}}
                 title={p.name}>
                 {p.profilePhoto
-                  ? <img src={p.profilePhoto} alt={p.name}/>
+                  ? <img src={getImageUrl(p.profilePhoto)} alt={p.name}/>
                   : <div style={{background:`${col}25`,color:col}}>{getInitials(p.name)}</div>
                 }
                 <span style={{color:col}}>@{p.name}</span>

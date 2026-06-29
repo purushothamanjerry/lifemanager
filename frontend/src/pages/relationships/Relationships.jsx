@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { link } from '../../utils/links.js';
-import { peopleApi } from '../../utils/api.js';
+import { peopleApi, getImageUrl } from '../../utils/api.js';
 import PersonForm from './PersonForm.jsx';
 import { differenceInDays } from 'date-fns';
 import './Relationships.css';
@@ -98,7 +98,7 @@ export default function Relationships() {
                   style={{ '--sc': m.color, '--sb': m.bg }}>
                   <div className="special-pill-avatar">
                     {p.profilePhoto
-                      ? <img src={p.profilePhoto} alt={p.name} />
+                      ? <img src={getImageUrl(p.profilePhoto)} alt={p.name} />
                       : <span style={{color:m.color}}>{getInitials(p.name)}</span>}
                   </div>
                   <span className="special-pill-name">{p.name}</span>
@@ -182,7 +182,7 @@ export default function Relationships() {
                 )}
                 <div className="pcard-photo-wrap">
                   {p.profilePhoto
-                    ? <img src={p.profilePhoto} alt={p.name} className="pcard-photo" />
+                    ? <img src={getImageUrl(p.profilePhoto)} alt={p.name} className="pcard-photo" />
                     : <div className="pcard-photo-ph" style={{background:m.bg, color:m.color}}>{getInitials(p.name)}</div>}
                   {over && <div className="pcard-overdue-ring" />}
                   <div className="pcard-type-dot" style={{background:m.color}} title={m.label}>{m.emoji}</div>
@@ -214,7 +214,7 @@ export default function Relationships() {
                 className="plist-item" style={{ animationDelay:`${i*0.03}s` }}>
                 <div style={{position:'relative',flexShrink:0}}>
                   {p.profilePhoto
-                    ? <img src={p.profilePhoto} alt={p.name} className="plist-avatar" />
+                    ? <img src={getImageUrl(p.profilePhoto)} alt={p.name} className="plist-avatar" />
                     : <div className="plist-avatar-ph" style={{background:m.bg,color:m.color}}>{getInitials(p.name)}</div>}
                   {over && <div className="plist-overdue" />}
                 </div>

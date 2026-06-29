@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { peopleApi, conversationsApi, memoriesApi } from '../../utils/api.js';
+import { peopleApi, conversationsApi, memoriesApi, getImageUrl } from '../../utils/api.js';
 import PersonForm from './PersonForm.jsx';
 import { differenceInDays, differenceInYears, format, addYears, isBefore } from 'date-fns';
 import './PersonProfile.css';
@@ -153,7 +153,7 @@ export default function PersonProfile() {
   style={{cursor: person.profilePhoto ? 'zoom-in' : 'default'}}>
   {person.profilePhoto ? (
     <img
-      src={person.profilePhoto}
+      src={getImageUrl(person.profilePhoto)}
       alt={person.name}
       className="pp-avatar"
     />
@@ -377,7 +377,7 @@ export default function PersonProfile() {
                           onMouseLeave={e=>e.currentTarget.style.borderColor='var(--border-dim)'}>
                           <div style={{width:36,height:36,borderRadius:'50%',background:lm.bg,color:lm.color,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.85rem',fontWeight:700,flexShrink:0,overflow:'hidden'}}>
                             {lp_person.profilePhoto
-                              ? <img src={lp_person.profilePhoto} alt={lp_person.name} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+                              ? <img src={getImageUrl(lp_person.profilePhoto)} alt={lp_person.name} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
                               : getInitials(lp_person.name)}
                           </div>
                           <div style={{flex:1,minWidth:0}}>
@@ -626,7 +626,7 @@ export default function PersonProfile() {
                   const cover = m.photos?.[m.coverPhoto || 0];
                   return (
                     <div key={m._id} className="pp-mem-item" style={{'--mc': emo.color, animationDelay:`${i*0.05}s`}}>
-                      {cover && <div className="pp-mem-thumb"><img src={cover} alt={m.title}/></div>}
+                      {cover && <div className="pp-mem-thumb"><img src={getImageUrl(cover)} alt={m.title}/></div>}
                       <div className="pp-mem-body">
                         <div className="pp-mem-top">
                           <span className="pp-mem-emoji">{emo.emoji}</span>
@@ -670,7 +670,7 @@ export default function PersonProfile() {
             ) : (
               <div className="pp-gallery">
                 {person.photos.map((ph,i) => (
-                  <div key={i} className="pp-gallery-item"><img src={ph} alt={`Photo ${i+1}`}/></div>
+                  <div key={i} className="pp-gallery-item"><img src={getImageUrl(ph)} alt={`Photo ${i+1}`}/></div>
                 ))}
               </div>
             )}
@@ -748,7 +748,7 @@ export default function PersonProfile() {
           }}>
           <div style={{position:'relative'}}>
             <img
-              src={person.profilePhoto}
+              src={getImageUrl(person.profilePhoto)}
               alt={person.name}
               onClick={e => e.stopPropagation()}
               style={{

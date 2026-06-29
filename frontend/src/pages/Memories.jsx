@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { memoriesApi, peopleApi } from '../utils/api.js';
+import { memoriesApi, peopleApi, getImageUrl } from '../utils/api.js';
 import { link } from '../utils/links.js';
 import { format, formatDistanceToNow } from 'date-fns';
 import './Memories.css';
@@ -200,7 +200,7 @@ function MemoryForm({ memory, people, onSave, onCancel }) {
                       const col=TYPE_COLORS[p.relationshipType]||'#888';
                       return(
                         <button key={p._id} className="mention-option" onMouseDown={()=>pick(p)}>
-                          <div className="mention-opt-avatar">{p.profilePhoto?<img src={p.profilePhoto} alt={p.name}/>:<div style={{background:`${col}22`,color:col}}>{getInitials(p.name)}</div>}</div>
+                        <div className="mention-opt-avatar">{p.profilePhoto?<img src={getImageUrl(p.profilePhoto)} alt={p.name}/>:<div style={{background:`${col}22`,color:col}}>{getInitials(p.name)}</div>}</div>
                           <div className="mention-opt-info"><span className="mention-opt-name">{p.name}</span><span className="mention-opt-type" style={{color:col}}>{p.relationshipType}</span></div>
                         </button>
                       );
@@ -237,7 +237,7 @@ function MemoryForm({ memory, people, onSave, onCancel }) {
                       className={`person-picker-btn ${isSel?'active':''} ${autoSel?'auto':''}`}
                       style={isSel?{borderColor:col,background:`${col}18`}:{}}
                       onClick={()=>!autoSel&&togglePerson(p._id)}>
-                      <div className="ppb-avatar">{p.profilePhoto?<img src={p.profilePhoto} alt={p.name}/>:<div style={{background:`${col}22`,color:col}}>{getInitials(p.name)}</div>}</div>
+                      <div className="ppb-avatar">{p.profilePhoto?<img src={getImageUrl(p.profilePhoto)} alt={p.name}/>:<div style={{background:`${col}22`,color:col}}>{getInitials(p.name)}</div>}</div>
                       <span className="ppb-name">{p.name}</span>
                       {autoSel&&<span className="ppb-auto">@</span>}
                       {manSel&&!autoSel&&<span className="ppb-check">✓</span>}
@@ -346,7 +346,7 @@ function MemoryCard({ memory, onEdit, onDelete, onFav, onTagClick, onPersonFilte
               return(
                 <Link key={p._id} to={link.person(p._id)}
                   className="mem-person-chip" style={{color:col,background:`${col}15`,borderColor:`${col}30`}}>
-                  {p.profilePhoto?<img src={p.profilePhoto} alt={p.name}/>:<div style={{background:`${col}22`,color:col}}>{getInitials(p.name)}</div>}
+                  {p.profilePhoto?<img src={getImageUrl(p.profilePhoto)} alt={p.name}/>:<div style={{background:`${col}22`,color:col}}>{getInitials(p.name)}</div>}
                   <span>{p.name}</span>
                 </Link>
               );
@@ -433,7 +433,7 @@ function TimelineView({ memories, onEdit, onTagClick }) {
                                 return(
                                   <Link key={p._id} to={link.person(p._id)}
                                     className="tl-person-chip" style={{color:col,background:`${col}15`}}>
-                                    {p.profilePhoto?<img src={p.profilePhoto} alt={p.name}/>:<div style={{background:`${col}22`,color:col}}>{getInitials(p.name)}</div>}
+                                    {p.profilePhoto?<img src={getImageUrl(p.profilePhoto)} alt={p.name}/>:<div style={{background:`${col}22`,color:col}}>{getInitials(p.name)}</div>}
                                     {p.name}
                                   </Link>
                                 );
@@ -557,7 +557,7 @@ export default function Memories() {
         <div className="mem-person-banner">
           <Link to={link.person(filteredPerson._id)} className="mem-person-banner-avatar">
             {filteredPerson.profilePhoto
-              ?<img src={filteredPerson.profilePhoto} alt={filteredPerson.name}/>
+              ?<img src={getImageUrl(filteredPerson.profilePhoto)} alt={filteredPerson.name}/>
               :<div style={{background:'var(--bg-elevated)',color:'var(--gold)'}}>{getInitials(filteredPerson.name)}</div>
             }
           </Link>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { peopleApi } from '../utils/api.js';
+import { peopleApi, getImageUrl } from '../utils/api.js';
 import { differenceInDays, format, addYears, isBefore } from 'date-fns';
 import './Dashboard.css';
 import { link } from '../utils/links.js';
@@ -146,7 +146,7 @@ export default function Dashboard() {
                     <Link key={p._id} to={`/relationships/${p._id}`} className="recent-person-card" style={{animationDelay:`${i*0.04}s`}}>
                       <div className="recent-avatar-wrap">
                         {p.profilePhoto
-                          ? <img src={p.profilePhoto} alt={p.name} className="recent-avatar"/>
+                          ? <img src={getImageUrl(p.profilePhoto)} alt={p.name} className="recent-avatar"/>
                           : <div className="recent-avatar-ph" style={{background:`${col}22`,color:col}}>{getInitials(p.name)}</div>
                         }
                         <div className="recent-avatar-dot" style={{background:col}}/>
@@ -187,7 +187,7 @@ export default function Dashboard() {
                   <Link key={b.person._id} to={`/relationships/${b.person._id}`} className="birthday-item birthday-soon">
                     <div className="bday-avatar">
                       {b.person.profilePhoto
-                        ? <img src={b.person.profilePhoto} alt={b.person.name}/>
+                        ? <img src={getImageUrl(b.person.profilePhoto)} alt={b.person.name}/>
                         : <div style={{background:'rgba(251,191,36,0.2)',color:'#fbbf24'}}>{getInitials(b.person.name)}</div>
                       }
                     </div>
@@ -205,7 +205,7 @@ export default function Dashboard() {
                   <Link key={b.person._id} to={`/relationships/${b.person._id}`} className="birthday-item">
                     <div className="bday-avatar">
                       {b.person.profilePhoto
-                        ? <img src={b.person.profilePhoto} alt={b.person.name}/>
+                        ? <img src={getImageUrl(b.person.profilePhoto)} alt={b.person.name}/>
                         : <div style={{background:'rgba(96,165,250,0.15)',color:'#60a5fa'}}>{getInitials(b.person.name)}</div>
                       }
                     </div>
@@ -235,7 +235,7 @@ export default function Dashboard() {
                     <Link key={p._id} to={`/relationships/${p._id}`} className="love-item">
                       <div className="love-item-avatar">
                         {p.profilePhoto
-                          ? <img src={p.profilePhoto} alt={p.name}/>
+                          ? <img src={getImageUrl(p.profilePhoto)} alt={p.name}/>
                           : <div style={{background:`${col}22`,color:col}}>{getInitials(p.name)}</div>
                         }
                       </div>

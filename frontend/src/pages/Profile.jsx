@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { format, differenceInYears, parseISO } from 'date-fns';
-import { profileApi } from '../utils/api.js';
+import { profileApi, getImageUrl } from '../utils/api.js';
 import { useNavigate } from 'react-router-dom';
 import './Profile.css';
 
@@ -323,7 +323,7 @@ export default function Profile({ theme: appTheme, onThemeChange }) {
               {/* Photo */}
               <div className="hero-photo-wrap">
                 <div className="hero-photo"
-                  style={hasPhoto ? { backgroundImage: `url(${API_URL}${profile.profilePhoto})` } : {}}>
+                  style={hasPhoto ? { backgroundImage: `url(${getImageUrl(profile.profilePhoto)})` } : {}}>
                   {!hasPhoto && <span className="hero-photo-initial">
                     {(form.fullName||form.nickname||'?')[0]?.toUpperCase()}
                   </span>}
