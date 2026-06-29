@@ -5,10 +5,10 @@ const path = require('path');
 require('dotenv').config();
 
 const app = express();
-const PORT = 5001; // hardcoded — do not use env var so it never falls back to 5000
+const PORT = process.env.PORT || 5001;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/life-manager';
 
-app.use(cors({ origin: ['http://localhost:3002', 'http://127.0.0.1:3002'] }));
+app.use(cors({ origin: ['http://localhost:3002', 'http://127.0.0.1:3002', 'https://lifemanager26.netlify.app', process.env.FRONTEND_URL].filter(Boolean) }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
