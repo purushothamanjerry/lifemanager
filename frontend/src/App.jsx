@@ -15,8 +15,28 @@ import Profile from './pages/Profile.jsx';
 import './styles/global.css';
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    const savedPass = localStorage.getItem('auth_pass');
+    const correctPass = import.meta.env.VITE_APP_PASSWORD;
+    if (!correctPass) return true; // If no password set in env, allow access
+    return savedPass === correctPass;
+  });
+
   const [theme, setTheme] = useState(() => localStorage.getItem('lm-theme') || 'dark');
   const [open,  setOpen]  = useState(true);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      const pass = window.prompt("Enter password to access Life Manager:");
+      const correctPass = import.meta.env.VITE_APP_PASSWORD;
+      if (pass === correctPass) {
+        localStorage.setItem('auth_pass', pass);
+        setIsAuthenticated(true);
+      } else if (pass !== null) {
+        alert("Incorrect password. Please refresh the page to try again.");
+      }
+    }
+  }, [isAuthenticated]);
 
   // Apply theme to <html> immediately and on change
   useEffect(() => {
@@ -34,6 +54,22 @@ export default function App() {
   }, []); // eslint-disable-line
 
   const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
+
+  if (!isAuthenticated) {
+    return (
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        background: 'var(--bg-base)',
+        color: 'var(--text-primary)',
+        fontFamily: 'var(--font-sans)'
+      }}>
+        <h2>Access Denied</h2>
+      </div>
+    );
+  }
 
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
