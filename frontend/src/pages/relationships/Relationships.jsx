@@ -59,6 +59,9 @@ export default function Relationships() {
   });
   const [search, setSearch] = useState('');
   const [view, setView]     = useState('grid');
+  const [imgErrors, setImgErrors] = useState(new Set());
+
+  const handleImgError = (id) => setImgErrors(prev => new Set(prev).add(id));
 
   const load = async () => {
     try { const r = await peopleApi.getAll(); setPeople(r.data); }
@@ -97,8 +100,8 @@ export default function Relationships() {
                 <Link key={p._id} to={link.person(p._id)} className="special-pill"
                   style={{ '--sc': m.color, '--sb': m.bg }}>
                   <div className="special-pill-avatar">
-                    {p.profilePhoto
-                      ? <img src={getImageUrl(p.profilePhoto)} alt={p.name} />
+                    {p.profilePhoto && !imgErrors.has(p._id)
+                      ? <img src={getImageUrl(p.profilePhoto)} alt={p.name} onError={() => handleImgError(p._id)} />
                       : <span style={{color:m.color}}>{getInitials(p.name)}</span>}
                   </div>
                   <span className="special-pill-name">{p.name}</span>
@@ -181,8 +184,8 @@ export default function Relationships() {
                   <div style={{position:'absolute',top:8,left:8,fontSize:'0.75rem',lineHeight:1}}>⭐</div>
                 )}
                 <div className="pcard-photo-wrap">
-                  {p.profilePhoto
-                    ? <img src={getImageUrl(p.profilePhoto)} alt={p.name} className="pcard-photo" />
+                  {p.profilePhoto && !imgErrors.has(p._id)
+                    ? <img src={getImageUrl(p.profilePhoto)} alt={p.name} className="pcard-photo" onError={() => handleImgError(p._id)} />
                     : <div className="pcard-photo-ph" style={{background:m.bg, color:m.color}}>{getInitials(p.name)}</div>}
                   {over && <div className="pcard-overdue-ring" />}
                   <div className="pcard-type-dot" style={{background:m.color}} title={m.label}>{m.emoji}</div>
@@ -213,8 +216,8 @@ export default function Relationships() {
               <Link key={p._id} to={link.person(p._id)}
                 className="plist-item" style={{ animationDelay:`${i*0.03}s` }}>
                 <div style={{position:'relative',flexShrink:0}}>
-                  {p.profilePhoto
-                    ? <img src={getImageUrl(p.profilePhoto)} alt={p.name} className="plist-avatar" />
+                  {p.profilePhoto && !imgErrors.has(p._id)
+                    ? <img src={getImageUrl(p.profilePhoto)} alt={p.name} className="plist-avatar" onError={() => handleImgError(p._id)} />
                     : <div className="plist-avatar-ph" style={{background:m.bg,color:m.color}}>{getInitials(p.name)}</div>}
                   {over && <div className="plist-overdue" />}
                 </div>

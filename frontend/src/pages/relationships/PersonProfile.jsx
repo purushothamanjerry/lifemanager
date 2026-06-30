@@ -80,6 +80,7 @@ export default function PersonProfile() {
   const [newConvo, setNewConvo]   = useState({ date:'', place:'', summary:'', mood:'good' });
   const [isFav, setIsFav]         = useState(false);
   const [showPhoto, setShowPhoto] = useState(false); // ← lightbox state
+  const [imgError, setImgError]   = useState(false);
   const now = new Date();
 
   const load = async () => {
@@ -149,13 +150,14 @@ export default function PersonProfile() {
 
           {/* ── Avatar — clickable to open lightbox ── */}
           <div className="pp-avatar-wrap" 
-  onClick={() => person.profilePhoto && setShowPhoto(true)}
-  style={{cursor: person.profilePhoto ? 'zoom-in' : 'default'}}>
-  {person.profilePhoto ? (
+  onClick={() => person.profilePhoto && !imgError && setShowPhoto(true)}
+  style={{cursor: person.profilePhoto && !imgError ? 'zoom-in' : 'default'}}>
+  {person.profilePhoto && !imgError ? (
     <img
       src={getImageUrl(person.profilePhoto)}
       alt={person.name}
       className="pp-avatar"
+      onError={() => setImgError(true)}
     />
   ) : (
     <div className="pp-avatar-ph" style={{background:tm.bg,color:tm.color}}>
