@@ -27,6 +27,10 @@ app.use('/api/health', require('./routes/health'));
 // Server ping
 app.get('/api/ping', (req, res) => res.json({ status: 'ok', timestamp: new Date() }));
 
+// Backend health check API
+app.get('/api/healthcheck', (req, res) => res.status(200).json({ status: 'ok', health: 'ok' }));
+app.get('/health', (req, res) => res.status(200).json({ status: 'ok', health: 'ok' }));
+
 // ── Global error handler ──────────────────────────────────────────
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err.message);
