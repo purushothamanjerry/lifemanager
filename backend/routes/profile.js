@@ -5,20 +5,18 @@ const fs       = require('fs');
 const multer   = require('multer');
 const Profile  = require('../models/Profile');
 
+const { cloudinary, CloudinaryStorage } = require('../config/cloudinary');
+
 // ── Multer for profile photo ──────────────────────────────────────
 const ALLOWED_TYPES = ['image/jpeg','image/jpg','image/png','image/webp','image/gif'];
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = path.join(__dirname, '../uploads/profile');
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
-  },
-  // Timestamped filename avoids Windows file-lock conflicts on overwrite
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase() || '.jpg';
-    cb(null, `profile-${Date.now()}${ext}`);
-  },
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'life-manager/profile',
+    allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'gif'],
+    public_id: (req, file) => `profile-${Date.now()}`
+  }
 });
 
 const upload = multer({
@@ -81,19 +79,7 @@ router.post('/photo', (req, res) => {
     try {
       if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
 
-      // Delete previous profile photo(s) to avoid accumulation
-      const uploadDir = path.join(__dirname, '../uploads/profile');
-      if (fs.existsSync(uploadDir)) {
-        const files = fs.readdirSync(uploadDir);
-        files.forEach(f => {
-          // Delete old files but not the one we just saved
-          if (f !== req.file.filename) {
-            try { fs.unlinkSync(path.join(uploadDir, f)); } catch(_) {}
-          }
-        });
-      }
-
-      const photoPath = '/uploads/profile/' + req.file.filename;
+      const photoPath = req.file.path;
       const profile = await Profile.findByIdAndUpdate(
         'main',
         { profilePhoto: photoPath, updatedAt: new Date() },

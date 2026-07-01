@@ -6,15 +6,15 @@ const fs      = require('fs');
 const Memory  = require('../models/Memory');
 const Person  = require('../models/Person');
 
+const { cloudinary, CloudinaryStorage } = require('../config/cloudinary');
+
 // ── Multer setup ──────────────────────────────────────────────────────────
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = path.join(__dirname, '../uploads');
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, `mem-${Date.now()}-${file.originalname.replace(/\s/g, '_')}`);
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'life-manager/memories',
+    allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'gif'],
+    public_id: (req, file) => `mem-${Date.now()}-${file.originalname.replace(/\.\w+$/, '').replace(/\s/g, '_')}`
   }
 });
 const upload = multer({ storage, limits: { fileSize: 8 * 1024 * 1024 } });
@@ -95,7 +95,7 @@ router.post('/', upload.array('photos', 20), async (req, res) => {
       ? (Array.isArray(tags) ? tags : tags.split(',').map(t => t.trim().toLowerCase()).filter(Boolean))
       : [];
 
-    const photos = (req.files || []).map(f => `/uploads/${f.filename}`);
+    const photos = (req.files || []).map(f => f.path);
 
     const memory = new Memory({
       title, description, date, place, emotion,
@@ -144,7 +144,7 @@ router.put('/:id', upload.array('photos', 20), async (req, res) => {
 
     // Append new photos
     if (req.files?.length) {
-      update.$push = { photos: { $each: req.files.map(f => `/uploads/${f.filename}`) } };
+      update.$push = { photos: { $each: req.files.map(f => f.path) } };
     }
 
     const { $push, ...rest } = update;

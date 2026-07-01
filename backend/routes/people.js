@@ -5,18 +5,17 @@ const fs       = require('fs');
 const multer   = require('multer');
 const Person   = require('../models/Person');
 
+const { cloudinary, CloudinaryStorage } = require('../config/cloudinary');
+
 const ALLOWED = ['image/jpeg','image/jpg','image/png','image/webp','image/gif'];
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = path.join(__dirname, '../uploads/people');
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase() || '.jpg';
-    cb(null, `person-${Date.now()}${ext}`);
-  },
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'life-manager/people',
+    allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'gif'],
+    public_id: (req, file) => `person-${Date.now()}`
+  }
 });
 
 const upload = multer({
@@ -114,7 +113,7 @@ router.post('/', (req, res) => {
     if (err) return res.status(400).json({ error: err.message });
     try {
       const body = buildBody(req.body);
-      if (req.file) body.profilePhoto = '/uploads/people/' + req.file.filename;
+      if (req.file) body.profilePhoto = req.file.path;
       if (body.currentStatus) {
         body.statusHistory = [{
           status: body.currentStatus,
@@ -135,7 +134,7 @@ router.put('/:id', (req, res) => {
     if (err) return res.status(400).json({ error: err.message });
     try {
       const body = buildBody(req.body);
-      if (req.file) body.profilePhoto = '/uploads/people/' + req.file.filename;
+      if (req.file) body.profilePhoto = req.file.path;
       body.updatedAt = new Date();
 
       const existing = await Person.findById(req.params.id).select('currentStatus statusHistory');
@@ -168,7 +167,7 @@ router.post('/:id/photos', (req, res) => {
     if (err) return res.status(400).json({ error: err.message });
     try {
       if (!req.file) return res.status(400).json({ error: 'No file' });
-      const photoPath = '/uploads/people/' + req.file.filename;
+      const photoPath = req.file.path;
       const person = await Person.findByIdAndUpdate(
         req.params.id,
         { $push: { photos: photoPath } },
