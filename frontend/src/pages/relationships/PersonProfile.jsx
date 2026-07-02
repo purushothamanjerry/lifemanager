@@ -5,6 +5,8 @@ import PersonForm from './PersonForm.jsx';
 import { differenceInDays, differenceInYears, format, addYears, isBefore } from 'date-fns';
 import './PersonProfile.css';
 import { link } from '../../utils/links.js';
+import ReactCrop from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 
 const TYPE_META = {
   love:         { color:'#e8637a', bg:'rgba(232,99,122,0.12)', emoji:'❤️' },
@@ -106,10 +108,59 @@ export default function PersonProfile() {
     } catch(e) { console.error(e); }
   };
 
-  const handlePhotoUpload = async e => {
-    const file = e.target.files[0]; if (!file) return;
-    const fd = new FormData(); fd.append('profilePhoto', file);
-    try { await peopleApi.update(id, fd); load(); } catch(e) { console.error(e); }
+  const [cropSrc, setCropSrc] = useState(null);
+  const [crop, setCrop] = useState({ unit: '%', width: 100, aspect: 1 });
+  const [completedCrop, setCompletedCrop] = useState(null);
+  const imgRef = React.useRef(null);
+
+  const handlePhotoUpload = e => {
+    if (e.target.files && e.target.files.length > 0) {
+      const reader = new FileReader();
+      reader.addEventListener('load', () => setCropSrc(reader.result));
+      reader.readAsDataURL(e.target.files[0]);
+      e.target.value = null;
+    }
+  };
+
+  const handleCropComplete = async () => {
+    if (!completedCrop || !imgRef.current) {
+      setCropSrc(null);
+      return;
+    }
+    
+    const canvas = document.createElement('canvas');
+    const image = imgRef.current;
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+    
+    if (completedCrop.width === 0 || completedCrop.height === 0) {
+      setCropSrc(null);
+      return;
+    }
+
+    canvas.width = Math.floor(completedCrop.width * scaleX);
+    canvas.height = Math.floor(completedCrop.height * scaleY);
+    const ctx = canvas.getContext('2d');
+    
+    ctx.drawImage(
+      image,
+      completedCrop.x * scaleX,
+      completedCrop.y * scaleY,
+      completedCrop.width * scaleX,
+      completedCrop.height * scaleY,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+    canvas.toBlob(async blob => {
+      if (!blob) return;
+      const fd = new FormData();
+      fd.append('profilePhoto', blob, 'profile.jpg');
+      setCropSrc(null);
+      try { await peopleApi.update(id, fd); load(); } catch(e) { console.error(e); }
+    }, 'image/jpeg');
   };
 
   const handleDelete = async () => {
@@ -149,7 +200,7 @@ export default function PersonProfile() {
         <div className="pp-hero-left">
 
           {/* ── Avatar ── */}
-          <div className="pp-avatar-wrap" onClick={(e) => { if(!e.target.closest('button')) document.getElementById('avatar-upload').click(); }} style={{cursor: 'pointer'}}>
+          <div className="pp-avatar-wrap" onClick={(e) => { if(!e.target.closest('.pp-avatar-action')) document.getElementById('avatar-upload').click(); }} style={{cursor: 'pointer'}}>
             {person.profilePhoto && !imgError ? (
               <img
                 src={getImageUrl(person.profilePhoto)}
@@ -799,6 +850,38 @@ export default function PersonProfile() {
               textAlign:'center', color:'rgba(255,255,255,0.75)',
               fontSize:'0.85rem', fontWeight:600,
             }}>{person.name}</div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Crop Modal ── */}
+      {cropSrc && (
+        <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&setCropSrc(null)}>
+          <div className="modal" style={{maxWidth: 600}}>
+            <div className="modal-header">
+              <h2>Crop Photo</h2>
+              <button className="pform-close-btn" onClick={()=>setCropSrc(null)}>✕</button>
+            </div>
+            <div className="modal-body" style={{display: 'flex', justifyContent: 'center', background: 'var(--bg-base)', padding: 20, borderRadius: 8}}>
+              <ReactCrop
+                crop={crop}
+                onChange={(_, percentCrop) => setCrop(percentCrop)}
+                onComplete={(c) => setCompletedCrop(c)}
+                aspect={1}
+                circularCrop={true}
+              >
+                <img 
+                  ref={imgRef}
+                  alt="Crop me" 
+                  src={cropSrc} 
+                  style={{ maxHeight: '60vh', objectFit: 'contain' }}
+                />
+              </ReactCrop>
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-ghost" onClick={()=>setCropSrc(null)}>Cancel</button>
+              <button className="btn btn-primary" onClick={handleCropComplete}>Save Photo</button>
+            </div>
           </div>
         </div>
       )}
