@@ -1,3 +1,17 @@
-name,dateOfBirth,approximateAge,gender,relationshipType,currentStatus,firstMeetingPlace,firstMeetingDate,howWeMet,mobileNumber,instagramId,linkedinId,twitterId,snapchatId,email,otherContact,height,eyeColor,hairColor,hairLength,bodyType,styleNotes,appearanceNotes,hobbies,favoriteColor,habits,personalityNotes,characterTraits,loveLanguage,communicationStyle,values,quirks,isSpecial,notes,lastConversationDate
-"John Doe","1990-05-15",,"male","friend","good","Coffee Shop","2023-01-10","Met through mutual friends","1234567890","johndoe_ig",,,,"johndoe@email.com",,"5'10","Brown","Black","Short","Athletic","Casual","Wears glasses","Reading, Hiking","Blue","Biting nails","Outgoing and funny","Kind, Loyal","words","Direct","Honesty","Always taps foot",false,"Great guy to hang out with.","2024-01-05"
-"Jane Smith",,, "female", "colleague", "distant",,,,,,,,,,,,,,,,,,,,,,,,,,,false,,
+John Doe,1990-05-15,,male,friend,good,Coffee Shop,2023-01-10,Met through mutual friends,1234567890,johndoe_ig,,,,johndoe@email.com,,5'10,Brown,Black,Short,Athletic,Casual,Wears glasses,"Reading, Hiking",Blue,Biting nails,Outgoing and funny,"Kind, Loyal",words,Direct,Honesty,Always taps foot,false,Great guy to hang out with.,2024-01-05
+Jane Smith,,," ""female"""," ""colleague"""," ""distant""",college,2021-10-27,,,,,,,,,,,,,,,,,,,,,,,,,false,,
+Kaviyarasan,,,Male,class mate,Ended,college,2021-10-27
+SHOBNA SAMUKTHA RAJ S,,,,class mate,Ended,college,2021-10-27
+SOWNDARYA M,,,,class mate,Ended,college,2021-10-27
+SUBHARANJANI M,,,,class mate,Ended,college,2021-10-27
+SURYA D,,,Male,class mate,Lost touch,college,2021-10-27
+YALINI A,,,,class mate,Ended,college,2021-10-27
+ABINAYA G,,,,class mate,Ended,college,2021-10-27
+ANUKRITHIKA K,,,,class mate,recently reconnected,college,2021-10-27
+ARCHANA A,,,,class mate,Ended,college,2021-10-27
+BHARATHI KANNAN V,,,Male,class mate,Occusinal Contact,college,2021-10-27
+DARSHANA S P,,,,class mate,Ended,college,2021-10-27
+DEEPAN RAJ J,,,Male,class mate,Close,college,2021-10-27
+HELANHENCIDA K,,,,class mate,Ended,college,2021-10-27
+NESIGAA M,,,,class mate,Ended,college,2021-10-27
+ARUNAGIRI B,,,Male,class mate,Lost Tocuh,college,2021-10-27

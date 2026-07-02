@@ -148,25 +148,45 @@ export default function PersonProfile() {
         <div className="pp-hero-bg" style={{background:`radial-gradient(ellipse at 60% 50%, ${tm.color}18, transparent 70%)`}}/>
         <div className="pp-hero-left">
 
-          {/* ── Avatar — clickable to open lightbox ── */}
-          <div className="pp-avatar-wrap" 
-  onClick={() => person.profilePhoto && !imgError && setShowPhoto(true)}
-  style={{cursor: person.profilePhoto && !imgError ? 'zoom-in' : 'default'}}>
-  {person.profilePhoto && !imgError ? (
-    <img
-      src={getImageUrl(person.profilePhoto)}
-      alt={person.name}
-      className="pp-avatar"
-      onError={() => setImgError(true)}
-    />
-  ) : (
-    <div className="pp-avatar-ph" style={{background:tm.bg,color:tm.color}}>
-      {getInitials(person.name)}
-    </div>
-  )}
-  {isSpecial && <div className="pp-avatar-ring" style={{borderColor:tm.color}}/>}
-  {isBirthdayToday && <div className="pp-bday-badge">🎂</div>}
-</div>
+          {/* ── Avatar ── */}
+          <div className="pp-avatar-wrap">
+            {person.profilePhoto && !imgError ? (
+              <img
+                src={getImageUrl(person.profilePhoto)}
+                alt={person.name}
+                className="pp-avatar"
+                onError={() => setImgError(true)}
+              />
+            ) : (
+              <div className="pp-avatar-ph" style={{background:tm.bg,color:tm.color}}>
+                {getInitials(person.name)}
+              </div>
+            )}
+            
+            <div className="pp-avatar-overlay">
+              {person.profilePhoto && !imgError && (
+                <button 
+                  className="pp-avatar-action" 
+                  onClick={() => setShowPhoto(true)}
+                  title="View Photo"
+                >
+                  👁️
+                </button>
+              )}
+              <label className="pp-avatar-action" title="Upload Photo">
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  style={{display:'none'}} 
+                  onChange={handlePhotoUpload} 
+                />
+                📷
+              </label>
+            </div>
+
+            {isSpecial && <div className="pp-avatar-ring" style={{borderColor:tm.color}}/>}
+            {isBirthdayToday && <div className="pp-bday-badge">🎂</div>}
+          </div>
 
           <div className="pp-hero-info">
             <div className="pp-hero-top">
