@@ -1,17 +1,18 @@
-John Doe,1990-05-15,,male,friend,good,Coffee Shop,2023-01-10,Met through mutual friends,1234567890,johndoe_ig,,,,johndoe@email.com,,5'10,Brown,Black,Short,Athletic,Casual,Wears glasses,"Reading, Hiking",Blue,Biting nails,Outgoing and funny,"Kind, Loyal",words,Direct,Honesty,Always taps foot,false,Great guy to hang out with.,2024-01-05
+﻿name,dateOfBirth,approximateAge,gender,relationshipType,currentStatus,firstMeetingPlace,firstMeetingDate,howWeMet,mobileNumber,instagramId,linkedinId,twitterId,snapchatId,email,otherContact,height,eyeColor,hairColor,hairLength,bodyType,styleNotes,appearanceNotes,hobbies,favoriteColor,habits,personalityNotes,characterTraits,loveLanguage,communicationStyle,values,quirks,isSpecial,notes,lastConversationDate
+John Doe,1990-05-15,,male,friend,good,Coffee Shop,2023-01-10,Met through mutual friends,1234567890,johndoe_ig,,,,johndoe@email.com,,5'10,Brown,Black,Short,Athletic,Casual,Wears glasses,"Reading, Hiking",Blue,Biting nails,Outgoing and funny,"Kind, Loyal",words,Direct,Honesty,Always taps foot,false,Great guy to hang out with.,45296.22928
 Jane Smith,,," ""female"""," ""colleague"""," ""distant""",college,2021-10-27,,,,,,,,,,,,,,,,,,,,,,,,,false,,
-Kaviyarasan,,,Male,class mate,Ended,college,2021-10-27
-SHOBNA SAMUKTHA RAJ S,,,,class mate,Ended,college,2021-10-27
-SOWNDARYA M,,,,class mate,Ended,college,2021-10-27
-SUBHARANJANI M,,,,class mate,Ended,college,2021-10-27
-SURYA D,,,Male,class mate,Lost touch,college,2021-10-27
-YALINI A,,,,class mate,Ended,college,2021-10-27
-ABINAYA G,,,,class mate,Ended,college,2021-10-27
-ANUKRITHIKA K,,,,class mate,recently reconnected,college,2021-10-27
-ARCHANA A,,,,class mate,Ended,college,2021-10-27
-BHARATHI KANNAN V,,,Male,class mate,Occusinal Contact,college,2021-10-27
-DARSHANA S P,,,,class mate,Ended,college,2021-10-27
-DEEPAN RAJ J,,,Male,class mate,Close,college,2021-10-27
-HELANHENCIDA K,,,,class mate,Ended,college,2021-10-27
-NESIGAA M,,,,class mate,Ended,college,2021-10-27
-ARUNAGIRI B,,,Male,class mate,Lost Tocuh,college,2021-10-27
+Kaviyarasan,2003-05-09,,Male,class mate,Ended,college,2021-10-27,,7339158862,,,,,vtasky007@gmail.com,,,,,,,,,,,,,,,,,,,,
+SHOBNA SAMUKTHA RAJ S,2004-05-16,,female,class mate,Ended,college,2021-10-27,,9363053431,,,,,samukthasamuktha2@gmail.com,,,,,,,,,,,,,,,,,,,,
+SOWNDARYA M,2003-08-19,,female,class mate,Ended,college,2021-10-27,,9385366995,,,,,sowndaryamadheswaran@gmail.com,,,,,,,,,,,,,,,,,,,,
+SUBHARANJANI M,2003-09-14,,female,class mate,Ended,college,2021-10-27,,9629235814,,,,,subharanjanisathya@gmail.com,,,,,,,,,,,,,,,,,,,,
+SURYA D,2003-02-06,,Male,class mate,Lost touch,college,2021-10-27,,9842769255,,,,,suryadhanpal272003@gmail.com,,,,,,,,,,,,,,,,,,,,
+YALINI A,2004-01-20,,female,class mate,Ended,college,2021-10-27,,8778100651,,,,,yalinianand30@gmail.com,,,,,,,,,,,,,,,,,,,,
+ABINAYA G,2003-08-20,,female,class mate,Ended,college,2021-10-27,,9080630435,,,,,abinayaganeshan2003@gamil.com,,,,,,,,,,,,,,,,,,,,
+ANUKRITHIKA K,2004-08-07,,female,class mate,recently reconnected,college,2021-10-27,,7904046237,,,,,anukrithika8804@gmail.com,,,,,,,,,,,,,,,,,,,,
+ARCHANA A,2004-03-23,,female,class mate,Ended,college,2021-10-27,,8072472912,,,,,archuar5000@gmail.com,,,,,,,,,,,,,,,,,,,,
+BHARATHI KANNAN V,2003-01-20,,Male,class mate,Occusinal Contact,college,2021-10-27,,7695855105,,,,,bharathikannanb684@gmail.com,,,,,,,,,,,,,,,,,,,,
+DARSHANA S P,2003-10-22,,female,class mate,Ended,college,2021-10-27,,9342684778,,,,,darshanashanmugam2003@gmail.con,,,,,,,,,,,,,,,,,,,,
+DEEPAN RAJ J,2004-05-14,,Male,class mate,Close,college,2021-10-27,,9345880052,,,,,deepandeepan8577@gmail.com,,,,,,,,,,,,,,,,,,,,
+HELANHENCIDA K,2004-07-07,,female,class mate,Ended,college,2021-10-27,,9944783043,,,,,helenhencida420@gmail.com ,,,,,,,,,,,,,,,,,,,,
+NESIGAA M,2003-11-26,,female,class mate,Ended,college,2021-10-27,,9342387358,,,,,sasinesigaa@gmail.com ,,,,,,,,,,,,,,,,,,,,
+ARUNAGIRI B,2004-03-31,,Male,class mate,Lost Tocuh,college,2021-10-27,,8248484452,,,,,arunagiri01430@gmail.com,,,,,,,,,,,,,,,,,,,,

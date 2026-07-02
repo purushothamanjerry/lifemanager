@@ -108,8 +108,8 @@ export default function PersonProfile() {
 
   const handlePhotoUpload = async e => {
     const file = e.target.files[0]; if (!file) return;
-    const fd = new FormData(); fd.append('photo', file);
-    try { await peopleApi.addPhoto(id, fd); load(); } catch(e) { console.error(e); }
+    const fd = new FormData(); fd.append('profilePhoto', file);
+    try { await peopleApi.update(id, fd); load(); } catch(e) { console.error(e); }
   };
 
   const handleDelete = async () => {
@@ -149,7 +149,7 @@ export default function PersonProfile() {
         <div className="pp-hero-left">
 
           {/* ── Avatar ── */}
-          <div className="pp-avatar-wrap">
+          <div className="pp-avatar-wrap" onClick={(e) => { if(!e.target.closest('button')) document.getElementById('avatar-upload').click(); }} style={{cursor: 'pointer'}}>
             {person.profilePhoto && !imgError ? (
               <img
                 src={getImageUrl(person.profilePhoto)}
@@ -167,14 +167,15 @@ export default function PersonProfile() {
               {person.profilePhoto && !imgError && (
                 <button 
                   className="pp-avatar-action" 
-                  onClick={() => setShowPhoto(true)}
+                  onClick={(e) => { e.stopPropagation(); setShowPhoto(true); }}
                   title="View Photo"
                 >
                   👁️
                 </button>
               )}
-              <label className="pp-avatar-action" title="Upload Photo">
+              <label className="pp-avatar-action" title="Upload Photo" onClick={(e) => e.stopPropagation()}>
                 <input 
+                  id="avatar-upload"
                   type="file" 
                   accept="image/*" 
                   style={{display:'none'}} 
