@@ -60,6 +60,17 @@ export default function Relationships() {
   const [search, setSearch] = useState('');
   const [view, setView]     = useState('grid');
   const [imgErrors, setImgErrors] = useState(new Set());
+  const [groupByCircle, setGroupByCircle] = useState(() => {
+    return localStorage.getItem('relationships_group_by_circle') === 'true';
+  });
+
+  const toggleGroupByCircle = () => {
+    setGroupByCircle(prev => {
+      const next = !prev;
+      localStorage.setItem('relationships_group_by_circle', String(next));
+      return next;
+    });
+  };
 
   const handleImgError = (id) => setImgErrors(prev => new Set(prev).add(id));
 
@@ -77,6 +88,35 @@ export default function Relationships() {
       if (ai !== bi) return ai - bi;
       return (getDaysSince(a.lastConversationDate)??9999) - (getDaysSince(b.lastConversationDate)??9999);
     });
+
+  const getCircleEmoji = (name) => {
+    if (!name) return '📁';
+    const n = name.toLowerCase();
+    if (n.includes('college') || n.includes('school') || n.includes('univ')) return '🎓';
+    if (n.includes('work') || n.includes('company') || n.includes('office') || n.includes('job') || n.includes('corp') || n.includes('colleague')) return '💼';
+    if (n.includes('gym') || n.includes('workout') || n.includes('fitness') || n.includes('sport')) return '💪';
+    if (n.includes('family') || n.includes('home') || n.includes('relative')) return '🏠';
+    if (n.includes('course') || n.includes('class') || n.includes('learn') || n.includes('stud')) return '📚';
+    if (n.includes('friend')) return '👫';
+    return '📁';
+  };
+
+  const groupedPeople = {};
+  let sortedGroupNames = [];
+  if (groupByCircle) {
+    filtered.forEach(p => {
+      const gName = p.group?.trim() || 'General';
+      if (!groupedPeople[gName]) groupedPeople[gName] = [];
+      groupedPeople[gName].push(p);
+    });
+    sortedGroupNames = Object.keys(groupedPeople).sort((a, b) => {
+      const isGeneralA = a.toLowerCase() === 'general';
+      const isGeneralB = b.toLowerCase() === 'general';
+      if (isGeneralA && !isGeneralB) return 1;
+      if (!isGeneralA && isGeneralB) return -1;
+      return a.localeCompare(b);
+    });
+  }
 
   const overdue = people.filter(p => {
     const d = getDaysSince(p.lastConversationDate);
@@ -120,6 +160,13 @@ export default function Relationships() {
           <p>{people.length} {people.length===1?'person':'people'} in your life</p>
         </div>
         <div className="rel-header-actions">
+          <button 
+            className={`btn-group-toggle ${groupByCircle ? 'active' : ''}`} 
+            onClick={toggleGroupByCircle}
+            title="Group by Circle"
+          >
+            📁 {groupByCircle ? 'Grouped' : 'Group by Circle'}
+          </button>
           <div className="view-btns">
             <button className={view==='grid'?'active':''} onClick={()=>setView('grid')}>⊞</button>
             <button className={view==='list'?'active':''} onClick={()=>setView('list')}>☰</button>
@@ -164,75 +211,100 @@ export default function Relationships() {
           <p>{search||filter!=='all'?'Try another filter.':'Add the people in your life.'}</p>
           {!search && filter==='all' && <button className="btn btn-primary" style={{marginTop:20}} onClick={()=>setShowForm(true)}>+ Add First Person</button>}
         </div>
-      ) : view === 'grid' ? (
-        <div className="people-grid">
-          {filtered.map((p, i) => {
-            const m    = TYPE_META[p.relationshipType] || TYPE_META.acquaintance;
-            const days = getDaysSince(p.lastConversationDate);
-            const lim  = REMINDER_DAYS[p.relationshipType] || 30;
-            const over = days !== null && days > lim && p.relationshipType !== 'one-time';
-            const lbl  = contactLabel(days);
-            const spec = ['love','crush','attracted','impressed'].includes(p.relationshipType);
-
-            return (
-              <Link key={p._id} to={link.person(p._id)}
-                className={`pcard ${spec?'pcard-special':''}`}
-                style={{ '--pc': m.color, '--pb': m.bg, animationDelay:`${i*0.04}s` }}>
-                {spec && <div className="pcard-glow" />}
-                {/* Star badge for manually special */}
-                {p.isSpecial && (
-                  <div style={{position:'absolute',top:8,left:8,fontSize:'0.75rem',lineHeight:1}}>⭐</div>
-                )}
-                <div className="pcard-photo-wrap">
-                  {p.profilePhoto && !imgErrors.has(p._id)
-                    ? <img src={getImageUrl(p.profilePhoto)} alt={p.name} className="pcard-photo" onError={() => handleImgError(p._id)} />
-                    : <div className="pcard-photo-ph" style={{background:m.bg, color:m.color}}>{getInitials(p.name)}</div>}
-                  {over && <div className="pcard-overdue-ring" />}
-                  <div className="pcard-type-dot" style={{background:m.color}} title={m.label}>{m.emoji}</div>
-                </div>
-                <div className="pcard-info">
-                  <div className="pcard-name">{p.name}</div>
-                  {p.age && <div className="pcard-age">{p.age} yrs</div>}
-                  <div className="pcard-badge" style={{background:m.bg, color:m.color}}>{m.label}</div>
-                </div>
-                <div className="pcard-footer">
-                  {lbl
-                    ? <span className={over?'c-over':'c-ok'}>{over?'⚠ ':''}{lbl}</span>
-                    : <span className="c-none">Never contacted</span>}
-                </div>
-              </Link>
-            );
-          })}
-        </div>
       ) : (
-        <div className="people-list-view">
-          {filtered.map((p,i) => {
-            const m    = TYPE_META[p.relationshipType] || TYPE_META.acquaintance;
-            const days = getDaysSince(p.lastConversationDate);
-            const lim  = REMINDER_DAYS[p.relationshipType]||30;
-            const over = days!==null && days>lim && p.relationshipType!=='one-time';
-            const lbl  = contactLabel(days);
-            return (
-              <Link key={p._id} to={link.person(p._id)}
-                className="plist-item" style={{ animationDelay:`${i*0.03}s` }}>
-                <div style={{position:'relative',flexShrink:0}}>
-                  {p.profilePhoto && !imgErrors.has(p._id)
-                    ? <img src={getImageUrl(p.profilePhoto)} alt={p.name} className="plist-avatar" onError={() => handleImgError(p._id)} />
-                    : <div className="plist-avatar-ph" style={{background:m.bg,color:m.color}}>{getInitials(p.name)}</div>}
-                  {over && <div className="plist-overdue" />}
+        (() => {
+          const renderPeople = (peopleList) => {
+            if (view === 'grid') {
+              return (
+                <div className="people-grid">
+                  {peopleList.map((p, i) => {
+                    const m    = TYPE_META[p.relationshipType] || TYPE_META.acquaintance;
+                    const days = getDaysSince(p.lastConversationDate);
+                    const lim  = REMINDER_DAYS[p.relationshipType] || 30;
+                    const over = days !== null && days > lim && p.relationshipType !== 'one-time';
+                    const lbl  = contactLabel(days);
+                    const spec = ['love','crush','attracted','impressed'].includes(p.relationshipType);
+
+                    return (
+                      <Link key={p._id} to={link.person(p._id)}
+                        className={`pcard ${spec?'pcard-special':''}`}
+                        style={{ '--pc': m.color, '--pb': m.bg, animationDelay:`${i*0.04}s` }}>
+                        {spec && <div className="pcard-glow" />}
+                        {/* Star badge for manually special */}
+                        {p.isSpecial && (
+                          <div style={{position:'absolute',top:8,left:8,fontSize:'0.75rem',lineHeight:1}}>⭐</div>
+                        )}
+                        <div className="pcard-photo-wrap">
+                          {p.profilePhoto && !imgErrors.has(p._id)
+                            ? <img src={getImageUrl(p.profilePhoto)} alt={p.name} className="pcard-photo" onError={() => handleImgError(p._id)} />
+                            : <div className="pcard-photo-ph" style={{background:m.bg, color:m.color}}>{getInitials(p.name)}</div>}
+                          {over && <div className="pcard-overdue-ring" />}
+                          <div className="pcard-type-dot" style={{background:m.color}} title={m.label}>{m.emoji}</div>
+                        </div>
+                        <div className="pcard-info">
+                          <div className="pcard-name">{p.name}</div>
+                          {p.age && <div className="pcard-age">{p.age} yrs</div>}
+                          <div className="pcard-badge" style={{background:m.bg, color:m.color}}>{m.label}</div>
+                        </div>
+                        <div className="pcard-footer">
+                          {lbl
+                            ? <span className={over?'c-over':'c-ok'}>{over?'⚠ ':''}{lbl}</span>
+                            : <span className="c-none">Never contacted</span>}
+                        </div>
+                      </Link>
+                    );
+                  })}
                 </div>
-                <div className="plist-info">
-                  <span className="plist-name">{p.name}</span>
-                  {p.age && <span className="plist-age">{p.age}</span>}
-                  {p.isSpecial && <span style={{fontSize:'0.72rem'}}>⭐</span>}
+              );
+            } else {
+              return (
+                <div className="people-list-view">
+                  {peopleList.map((p,i) => {
+                    const m    = TYPE_META[p.relationshipType] || TYPE_META.acquaintance;
+                    const days = getDaysSince(p.lastConversationDate);
+                    const lim  = REMINDER_DAYS[p.relationshipType]||30;
+                    const over = days!==null && days>lim && p.relationshipType!=='one-time';
+                    const lbl  = contactLabel(days);
+                    return (
+                      <Link key={p._id} to={link.person(p._id)}
+                        className="plist-item" style={{ animationDelay:`${i*0.03}s` }}>
+                        <div style={{position:'relative',flexShrink:0}}>
+                          {p.profilePhoto && !imgErrors.has(p._id)
+                            ? <img src={getImageUrl(p.profilePhoto)} alt={p.name} className="plist-avatar" onError={() => handleImgError(p._id)} />
+                            : <div className="plist-avatar-ph" style={{background:m.bg,color:m.color}}>{getInitials(p.name)}</div>}
+                          {over && <div className="plist-overdue" />}
+                        </div>
+                        <div className="plist-info">
+                          <span className="plist-name">{p.name}</span>
+                          {p.age && <span className="plist-age">{p.age}</span>}
+                          {p.isSpecial && <span style={{fontSize:'0.72rem'}}>⭐</span>}
+                        </div>
+                        <span className="plist-badge" style={{background:m.bg,color:m.color}}>{m.emoji} {m.label}</span>
+                        <span className={`plist-time ${over?'c-over':lbl?'c-ok':'c-none'}`}>{lbl||'Never'}</span>
+                        <span className="plist-arrow">›</span>
+                      </Link>
+                    );
+                  })}
                 </div>
-                <span className="plist-badge" style={{background:m.bg,color:m.color}}>{m.emoji} {m.label}</span>
-                <span className={`plist-time ${over?'c-over':lbl?'c-ok':'c-none'}`}>{lbl||'Never'}</span>
-                <span className="plist-arrow">›</span>
-              </Link>
-            );
-          })}
-        </div>
+              );
+            }
+          };
+
+          if (groupByCircle) {
+            return sortedGroupNames.map(gName => (
+              <div key={gName} className="circle-group-section">
+                <div className="circle-group-title">
+                  <span className="circle-group-emoji">{getCircleEmoji(gName)}</span>
+                  <span className="circle-group-name">{gName}</span>
+                  <span className="circle-group-count">{groupedPeople[gName].length}</span>
+                </div>
+                {renderPeople(groupedPeople[gName])}
+              </div>
+            ));
+          } else {
+            return renderPeople(filtered);
+          }
+        })()
       )}
 
       {showForm && <PersonForm onClose={()=>setShowForm(false)} onSaved={()=>{setShowForm(false);load();}} />}

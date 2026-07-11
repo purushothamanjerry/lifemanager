@@ -81,6 +81,8 @@ const PersonSchema = new mongoose.Schema({
   // ── Flags ─────────────────────────────────────────────────────────
   isSpecial: { type: Boolean, default: false },  // manually marked special
 
+  group: { type: String, trim: true, default: 'General' },
+
   // ── Private ───────────────────────────────────────────────────────
   notes:                { type: String },
   lastConversationDate: { type: Date },

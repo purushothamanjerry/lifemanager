@@ -12,6 +12,7 @@ const INIT = {
   hobbies:'',
   notes:'', lastConversationDate:'',
   isSpecial: false,
+  group: 'General',
 };
 
 const REL_TYPES = [
@@ -102,6 +103,7 @@ export default function PersonForm({ person, onClose, onSaved }) {
     notes:              person.notes              ?? '',
     isSpecial:          person.isSpecial          ?? false,
     favoriteColor:      person.favoriteColor      ?? '',
+    group:              person.group              ?? 'General',
   } : INIT);
 
   const [linkedPeople, setLinkedPeople]     = useState(
@@ -305,6 +307,15 @@ export default function PersonForm({ person, onClose, onSaved }) {
                 <div className="form-group full">
                   <label>Full Name *</label>
                   <input value={form.name} onChange={set('name')} placeholder="Jane Doe"/>
+                </div>
+                <div className="form-group full">
+                  <label>Circle / Group</label>
+                  <input value={form.group} onChange={set('group')} placeholder="e.g. College, Work, Gym, Family" list="existing-groups"/>
+                  <datalist id="existing-groups">
+                    {Array.from(new Set(allPeople.map(p => p.group).filter(Boolean))).map(g => (
+                      <option key={g} value={g} />
+                    ))}
+                  </datalist>
                 </div>
                 <div className="form-group">
                   <label>Gender</label>

@@ -35,6 +35,7 @@ function buildBody(body) {
     'mobileNumber','instagramId','linkedinId','twitterId','snapchatId',
     'email','otherContact','loveLanguage',
     'height','hairLength','bodyType','look',
+    'group',
   ];
   const dateFields   = ['dateOfBirth','firstMeetingDate','lastConversationDate'];
   const numberFields = ['approximateAge'];
