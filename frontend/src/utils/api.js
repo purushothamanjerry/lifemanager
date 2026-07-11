@@ -25,6 +25,7 @@ export const peopleApi = {
   update:   (id, data) => API.put(`/people/${id}`, data, { headers: { 'Content-Type': 'multipart/form-data' } }),
   delete:   (id)       => API.delete(`/people/${id}`),
   addPhoto: (id, data) => API.post(`/people/${id}/photos`, data, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  bulkGroup:(data)     => API.post('/people/bulk-group', data),
 };
 
 export const conversationsApi = {

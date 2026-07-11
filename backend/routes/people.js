@@ -96,6 +96,33 @@ router.get('/', async (req, res) => {
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
+// POST bulk update group
+router.post('/bulk-group', async (req, res) => {
+  try {
+    const { personIds, group } = req.body;
+    if (!Array.isArray(personIds)) {
+      return res.status(400).json({ error: 'personIds must be an array' });
+    }
+    const targetGroup = (group && group.trim()) ? group.trim() : 'General';
+
+    // 1. Remove group tag from people who were in the group but are not checked anymore
+    await Person.updateMany(
+      { group: targetGroup, _id: { $nin: personIds } },
+      { $set: { group: 'General' } }
+    );
+
+    // 2. Set group tag for all checked people
+    await Person.updateMany(
+      { _id: { $in: personIds } },
+      { $set: { group: targetGroup } }
+    );
+
+    res.json({ success: true, message: `Updated group "${targetGroup}" successfully.` });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // GET by ID
 router.get('/:id', async (req, res) => {
   try {

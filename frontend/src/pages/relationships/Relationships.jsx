@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { link } from '../../utils/links.js';
 import { peopleApi, getImageUrl } from '../../utils/api.js';
 import PersonForm from './PersonForm.jsx';
+import ManageCirclesModal from './ManageCirclesModal.jsx';
 import { differenceInDays } from 'date-fns';
 import './Relationships.css';
 
@@ -50,6 +51,7 @@ export default function Relationships() {
   const [people, setPeople]   = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [showManageCircles, setShowManageCircles] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const filter = searchParams.get('type') || 'all';
   const setFilter = (val) => setSearchParams(prev => {
@@ -166,6 +168,13 @@ export default function Relationships() {
             title="Group by Circle"
           >
             📁 {groupByCircle ? 'Grouped' : 'Group by Circle'}
+          </button>
+          <button 
+            className="btn-group-toggle" 
+            onClick={()=>setShowManageCircles(true)}
+            title="Manage Circles / Bulk Assign"
+          >
+            ⚙️ Manage Circles
           </button>
           <div className="view-btns">
             <button className={view==='grid'?'active':''} onClick={()=>setView('grid')}>⊞</button>
@@ -308,6 +317,13 @@ export default function Relationships() {
       )}
 
       {showForm && <PersonForm onClose={()=>setShowForm(false)} onSaved={()=>{setShowForm(false);load();}} />}
+      {showManageCircles && (
+        <ManageCirclesModal 
+          people={people} 
+          onClose={()=>setShowManageCircles(false)} 
+          onSaved={()=>{setShowManageCircles(false);load();}} 
+        />
+      )}
     </div>
   );
 }
