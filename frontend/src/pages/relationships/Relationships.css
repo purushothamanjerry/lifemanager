@@ -187,9 +187,13 @@
 
 /* Circle Group sections */
 .circle-group-section {
-  margin-top: 32px;
+  margin-top: 24px;
   margin-bottom: 24px;
   width: 100%;
+  transition: all 0.3s ease;
+}
+.circle-group-section.collapsed {
+  margin-bottom: 12px;
 }
 .circle-group-section:first-of-type {
   margin-top: 16px;
@@ -197,23 +201,52 @@
 .circle-group-title {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 20px;
   font-family: var(--font-display);
   font-size: 1.15rem;
   font-weight: 600;
   color: var(--text-1);
   border-bottom: 1px solid var(--border-dim);
-  padding-bottom: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.01);
+}
+.circle-group-title:hover {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--gold);
+  border-bottom-color: var(--gold-dim);
+}
+.circle-group-arrow {
+  font-size: 0.75rem;
+  color: var(--text-3);
+  width: 16px;
+  display: inline-flex;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+.circle-group-title:hover .circle-group-arrow {
+  color: var(--gold);
 }
 .circle-group-emoji {
   font-size: 1.25rem;
 }
 .circle-group-count {
   font-size: 0.75rem;
-  font-weight: 400;
+  font-weight: 500;
   background: var(--bg-elevated);
   color: var(--text-3);
   padding: 2px 8px;
   border-radius: 10px;
+  margin-left: auto;
+  border: 1px solid var(--border-dim);
+  transition: all 0.2s ease;
+}
+.circle-group-title:hover .circle-group-count {
+  background: var(--gold-dim);
+  color: var(--gold);
+  border-color: rgba(212, 168, 83, 0.2);
 }

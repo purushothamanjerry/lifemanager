@@ -65,6 +65,27 @@ export default function Relationships() {
   const [groupByCircle, setGroupByCircle] = useState(() => {
     return localStorage.getItem('relationships_group_by_circle') === 'true';
   });
+  const [collapsedGroups, setCollapsedGroups] = useState(() => {
+    try {
+      const saved = localStorage.getItem('relationships_collapsed_groups');
+      return saved ? new Set(JSON.parse(saved)) : new Set();
+    } catch (e) {
+      return new Set();
+    }
+  });
+
+  const toggleGroupCollapse = (gName) => {
+    setCollapsedGroups(prev => {
+      const next = new Set(prev);
+      if (next.has(gName)) {
+        next.delete(gName);
+      } else {
+        next.add(gName);
+      }
+      localStorage.setItem('relationships_collapsed_groups', JSON.stringify(Array.from(next)));
+      return next;
+    });
+  };
 
   const toggleGroupByCircle = () => {
     setGroupByCircle(prev => {
@@ -300,16 +321,21 @@ export default function Relationships() {
           };
 
           if (groupByCircle) {
-            return sortedGroupNames.map(gName => (
-              <div key={gName} className="circle-group-section">
-                <div className="circle-group-title">
-                  <span className="circle-group-emoji">{getCircleEmoji(gName)}</span>
-                  <span className="circle-group-name">{gName}</span>
-                  <span className="circle-group-count">{groupedPeople[gName].length}</span>
+            return sortedGroupNames.map(gName => {
+              const isCollapsed = collapsedGroups.has(gName);
+              const members = groupedPeople[gName];
+              return (
+                <div key={gName} className={`circle-group-section ${isCollapsed ? 'collapsed' : ''}`}>
+                  <div className="circle-group-title" onClick={() => toggleGroupCollapse(gName)}>
+                    <span className="circle-group-arrow">{isCollapsed ? '▶' : '▼'}</span>
+                    <span className="circle-group-emoji">{getCircleEmoji(gName)}</span>
+                    <span className="circle-group-name">{gName}</span>
+                    <span className="circle-group-count">{members.length}</span>
+                  </div>
+                  {!isCollapsed && renderPeople(members)}
                 </div>
-                {renderPeople(groupedPeople[gName])}
-              </div>
-            ));
+              );
+            });
           } else {
             return renderPeople(filtered);
           }
