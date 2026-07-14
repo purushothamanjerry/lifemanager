@@ -6,6 +6,18 @@ function getInitials(n) {
   return n.split(' ').map(x=>x[0]).join('').toUpperCase().slice(0,2);
 }
 
+function getCircleEmoji(name) {
+  if (!name) return '📁';
+  const n = name.toLowerCase();
+  if (n.includes('college') || n.includes('school') || n.includes('univ')) return '🎓';
+  if (n.includes('work') || n.includes('company') || n.includes('office') || n.includes('job') || n.includes('corp') || n.includes('colleague')) return '💼';
+  if (n.includes('gym') || n.includes('workout') || n.includes('fitness') || n.includes('sport')) return '💪';
+  if (n.includes('family') || n.includes('home') || n.includes('relative')) return '🏠';
+  if (n.includes('course') || n.includes('class') || n.includes('learn') || n.includes('stud')) return '📚';
+  if (n.includes('friend')) return '👫';
+  return '📁';
+}
+
 export default function ManageCirclesModal({ people = [], onClose, onSaved }) {
   const [groupName, setGroupName] = useState('');
   const [selectedPeople, setSelectedPeople] = useState(new Set());
@@ -28,6 +40,15 @@ export default function ManageCirclesModal({ people = [], onClose, onSaved }) {
     const matchingPeople = people.filter(p => (p.group || 'General').toLowerCase() === trimmed.toLowerCase());
     setSelectedPeople(new Set(matchingPeople.map(p => p._id)));
   }, [groupName, people]);
+
+  const handleChipClick = (name) => {
+    const trimmed = groupName.trim();
+    if (trimmed.toLowerCase() === name.toLowerCase()) {
+      setGroupName('');
+    } else {
+      setGroupName(name);
+    }
+  };
 
   const handleTogglePerson = (id) => {
     setSelectedPeople(prev => {
@@ -117,6 +138,24 @@ export default function ManageCirclesModal({ people = [], onClose, onSaved }) {
                 <option key={g} value={g} />
               ))}
             </datalist>
+            {existingGroups.length > 0 && (
+              <div className="mcm-existing-chips">
+                <span className="mcm-chips-label">Existing:</span>
+                {existingGroups.map(g => {
+                  const isActive = groupName.trim().toLowerCase() === g.toLowerCase();
+                  return (
+                    <button
+                      type="button"
+                      key={g}
+                      className={`mcm-chip-btn ${isActive ? 'active' : ''}`}
+                      onClick={() => handleChipClick(g)}
+                    >
+                      {getCircleEmoji(g)} {g}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
             <p className="mcm-hint">
               Type a new circle name or select an existing one. Checking people will add them to this circle, and unchecking will return them to General.
             </p>
@@ -128,7 +167,7 @@ export default function ManageCirclesModal({ people = [], onClose, onSaved }) {
             <div className="mcm-people-header">
               <label>Select Members ({selectedPeople.size} selected)</label>
               <div className="mcm-search-wrap">
-                🔍
+                <span className="mcm-search-icon">🔍</span>
                 <input
                   type="text"
                   placeholder="Search people..."
@@ -136,6 +175,16 @@ export default function ManageCirclesModal({ people = [], onClose, onSaved }) {
                   onChange={e => setSearchQuery(e.target.value)}
                   className="mcm-search-input"
                 />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    className="mcm-search-clear"
+                    onClick={() => setSearchQuery('')}
+                    title="Clear search"
+                  >
+                    ✕
+                  </button>
+                )}
               </div>
             </div>
 

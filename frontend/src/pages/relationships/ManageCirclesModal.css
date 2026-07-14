@@ -335,3 +335,78 @@
   accent-color: var(--gold);
   cursor: pointer;
 }
+
+/* Existing group chips selector styling */
+.mcm-existing-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  margin-bottom: 2px;
+  align-items: center;
+}
+
+.mcm-chips-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-3);
+  margin-right: 4px;
+}
+
+.mcm-chip-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border: 1px solid var(--border-dim);
+  border-radius: 20px;
+  background: var(--bg-surface);
+  color: var(--text-3);
+  font-size: 0.78rem;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.mcm-chip-btn:hover {
+  border-color: var(--border-bright);
+  color: var(--text-2);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.mcm-chip-btn.active {
+  background: var(--gold-dim);
+  border-color: var(--gold);
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* Clear search button styling */
+.mcm-search-clear {
+  background: transparent;
+  border: none;
+  color: var(--text-3);
+  cursor: pointer;
+  font-size: 0.72rem;
+  padding: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.mcm-search-clear:hover {
+  color: var(--rose);
+  background: rgba(232, 99, 122, 0.15);
+}
+
+.mcm-search-icon {
+  flex-shrink: 0;
+}
