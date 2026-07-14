@@ -10,6 +10,7 @@ export default function ManageCirclesModal({ people = [], onClose, onSaved }) {
   const [groupName, setGroupName] = useState('');
   const [selectedPeople, setSelectedPeople] = useState(new Set());
   const [searchQuery, setSearchQuery] = useState('');
+  const [hideAssigned, setHideAssigned] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
@@ -76,9 +77,18 @@ export default function ManageCirclesModal({ people = [], onClose, onSaved }) {
     }
   };
 
-  const filteredPeople = people.filter(p => 
-    p.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const trimmedGroup = groupName.trim().toLowerCase();
+  const filteredPeople = people.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
+    if (!matchesSearch) return false;
+    if (hideAssigned) {
+      const pGroup = (p.group || 'General').toLowerCase();
+      if (pGroup !== 'general' && pGroup !== trimmedGroup) {
+        return false;
+      }
+    }
+    return true;
+  });
 
   return (
     <div className="mcm-overlay" onClick={onClose}>
@@ -129,6 +139,18 @@ export default function ManageCirclesModal({ people = [], onClose, onSaved }) {
               </div>
             </div>
 
+            <div className="mcm-filter-options">
+              <label className="mcm-checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={hideAssigned}
+                  onChange={e => setHideAssigned(e.target.checked)}
+                  className="mcm-filter-checkbox"
+                />
+                Hide members already in other groups
+              </label>
+            </div>
+
             {filteredPeople.length > 0 && (
               <div className="mcm-bulk-btns">
                 <button type="button" onClick={() => handleSelectAllFiltered(filteredPeople.map(p => p._id))}>
@@ -166,7 +188,7 @@ export default function ManageCirclesModal({ people = [], onClose, onSaved }) {
                       </div>
                       <div className="mcm-person-info">
                         <span className="mcm-person-name">{p.name}</span>
-                        {p.group && p.group !== 'General' && (
+                        {p.group && p.group.toLowerCase() !== 'general' && (
                           <span className={`mcm-person-tag ${isCurrentlyInThisGroup ? 'current' : ''}`}>
                             {p.group}
                           </span>
