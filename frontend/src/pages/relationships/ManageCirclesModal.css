@@ -14,8 +14,9 @@
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  width: 100%;
-  max-width: 520px;
+  width: 90%;
+  max-width: 640px;
+  height: 680px;
   max-height: 85vh;
   display: flex;
   flex-direction: column;
@@ -186,6 +187,7 @@
   background: var(--bg-surface);
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   max-height: 380px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
