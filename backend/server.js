@@ -49,6 +49,11 @@ app.use('/api/health', require('./routes/health'));
 // Server ping
 app.get('/api/ping', (req, res) => res.json({ status: 'ok', timestamp: new Date() }));
 
+// Auth status check
+app.get('/api/auth/status', (req, res) => {
+  res.json({ authRequired: !!process.env.APP_PASSWORD });
+});
+
 // Backend health check API
 app.get('/api/healthcheck', (req, res) => res.status(200).json({ status: 'ok', health: 'ok' }));
 app.get('/health', (req, res) => res.status(200).json({ status: 'ok', health: 'ok' }));

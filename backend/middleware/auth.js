@@ -1,7 +1,7 @@
-const publicPaths = ['/api/healthcheck', '/api/ping', '/health'];
+const publicPaths = ['/api/healthcheck', '/api/ping', '/health', '/api/auth/status'];
 
 module.exports = (req, res, next) => {
-  // Allow health/ping endpoints to bypass authentication
+  // Allow health/ping and auth-status endpoints to bypass authentication
   if (publicPaths.includes(req.path)) {
     return next();
   }

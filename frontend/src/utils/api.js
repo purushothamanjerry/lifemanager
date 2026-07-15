@@ -130,3 +130,7 @@ export const profileApi = {
   getStats:    ()          => API.get('/profile/stats'),
   getRecent:   ()          => API.get('/profile/recent'),
 };
+
+export const authApi = {
+  getStatus:   ()          => API.get('/auth/status'),
+};

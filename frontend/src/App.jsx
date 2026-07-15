@@ -12,7 +12,7 @@ import Finance from './pages/Finance.jsx';
 import Health from './pages/Health.jsx';
 import Activity from './pages/Activity.jsx';
 import Profile from './pages/Profile.jsx';
-import { profileApi } from './utils/api.js';
+import { profileApi, authApi } from './utils/api.js';
 import './styles/global.css';
 import './styles/Login.css';
 
@@ -96,23 +96,50 @@ function LoginScreen({ onLoginSuccess }) {
 }
 
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    const savedPass = localStorage.getItem('auth_pass');
-    const loginTime = localStorage.getItem('auth_login_time');
-    
-    if (!savedPass) return false;
-
-    // Check if 24-hour session has expired
-    if (loginTime && Date.now() - Number(loginTime) > 24 * 60 * 60 * 1000) {
-      localStorage.removeItem('auth_pass');
-      localStorage.removeItem('auth_login_time');
-      return false;
-    }
-    return true;
-  });
-
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const [theme, setTheme] = useState(() => localStorage.getItem('lm-theme') || 'dark');
   const [open,  setOpen]  = useState(true);
+
+  // Sync saved session on mount and query backend auth status
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const savedPass = localStorage.getItem('auth_pass');
+        const loginTime = localStorage.getItem('auth_login_time');
+        
+        // 1. Verify if backend requires auth
+        const statusRes = await authApi.getStatus();
+        const { authRequired } = statusRes.data;
+
+        if (!authRequired) {
+          setIsAuthenticated(true);
+        } else {
+          // 2. Check if a valid 24h session exists
+          if (savedPass) {
+            if (loginTime && Date.now() - Number(loginTime) > 24 * 60 * 60 * 1000) {
+              localStorage.removeItem('auth_pass');
+              localStorage.removeItem('auth_login_time');
+              setIsAuthenticated(false);
+            } else {
+              setIsAuthenticated(true);
+            }
+          } else {
+            setIsAuthenticated(false);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to check auth status:', err);
+        // Fallback: check localStorage session on network error
+        const savedPass = localStorage.getItem('auth_pass');
+        setIsAuthenticated(!!savedPass);
+      } finally {
+        setCheckingAuth(false);
+      }
+    };
+
+    checkAuthStatus();
+  }, []);
 
   // Auto-logout when backend API returns 401
   useEffect(() => {
@@ -139,6 +166,22 @@ export default function App() {
   }, []); // eslint-disable-line
 
   const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
+
+  if (checkingAuth) {
+    return (
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        background: 'var(--bg-base)',
+        color: 'var(--text-1)',
+        fontFamily: 'var(--font-body)'
+      }}>
+        <div className="spinner" style={{ width: '40px', height: '40px', borderTopColor: 'var(--gold)' }} />
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return <LoginScreen onLoginSuccess={() => setIsAuthenticated(true)} />;
