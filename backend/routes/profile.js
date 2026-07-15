@@ -99,9 +99,13 @@ router.post('/safety/set-pin', async (req, res) => {
     const { pin } = req.body;
     if (!pin || String(pin).length < 4)
       return res.status(400).json({ error: 'PIN must be at least 4 digits' });
+    
+    const crypto = require('crypto');
+    const pinHash = crypto.createHash('sha256').update(String(pin)).digest('hex');
+
     await Profile.findByIdAndUpdate(
       'main',
-      { safetyModePinHash: String(pin), updatedAt: new Date() },
+      { safetyModePinHash: pinHash, updatedAt: new Date() },
       { upsert: true }
     );
     res.json({ message: 'PIN set successfully' });
@@ -117,7 +121,13 @@ router.post('/safety/verify-pin', async (req, res) => {
     const { pin } = req.body;
     const profile = await Profile.findById('main');
     if (!profile || !profile.safetyModePinHash) return res.json({ valid: true });
-    res.json({ valid: profile.safetyModePinHash === String(pin) });
+
+    const crypto = require('crypto');
+    const inputHash = crypto.createHash('sha256').update(String(pin)).digest('hex');
+
+    // Support legacy plaintext PINs during migration transition
+    const isValid = (profile.safetyModePinHash === inputHash) || (profile.safetyModePinHash === String(pin));
+    res.json({ valid: isValid });
   } catch(e) {
     console.error('POST /profile/safety/verify-pin error:', e.message);
     res.status(500).json({ error: e.message });

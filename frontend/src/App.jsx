@@ -12,40 +12,125 @@ import Finance from './pages/Finance.jsx';
 import Health from './pages/Health.jsx';
 import Activity from './pages/Activity.jsx';
 import Profile from './pages/Profile.jsx';
+import { profileApi } from './utils/api.js';
 import './styles/global.css';
+import './styles/Login.css';
+
+function LoginScreen({ onLoginSuccess }) {
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [shake, setShake] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!password) {
+      setError('Please enter your password.');
+      triggerShake();
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      // Temporarily store password for verification check in Axios interceptor
+      localStorage.setItem('auth_pass', password);
+      
+      // Test the credentials against the backend profile route
+      await profileApi.get();
+      
+      // Store success timestamp
+      localStorage.setItem('auth_login_time', Date.now().toString());
+      onLoginSuccess();
+    } catch (err) {
+      localStorage.removeItem('auth_pass');
+      localStorage.removeItem('auth_login_time');
+      setError('Invalid password. Access denied.');
+      triggerShake();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const triggerShake = () => {
+    setShake(true);
+    setTimeout(() => setShake(false), 500);
+  };
+
+  return (
+    <div className="login-container">
+      <div className="login-glow" />
+      <div className={`login-card ${shake ? 'shake' : ''}`}>
+        <div className="login-logo">✨</div>
+        <h1 className="login-title">Life Manager</h1>
+        <p className="login-subtitle">Secure access to your personal universe</p>
+        
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="login-group">
+            <label className="login-label">Access Password</label>
+            <input
+              type="password"
+              className="login-input"
+              placeholder="••••••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={loading}
+              autoFocus
+            />
+          </div>
+          
+          {error && <div className="login-error">{error}</div>}
+          
+          <button type="submit" className="login-button" disabled={loading}>
+            {loading ? <div className="spinner" /> : 'Unlock Vault'}
+          </button>
+        </form>
+        
+        <div className="login-footer">
+          Secured with local hardware storage · Session active for 24h
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     const savedPass = localStorage.getItem('auth_pass');
-    const correctPass = import.meta.env.VITE_APP_PASSWORD;
-    if (!correctPass) return true; // If no password set in env, allow access
-    return savedPass === correctPass;
+    const loginTime = localStorage.getItem('auth_login_time');
+    
+    if (!savedPass) return false;
+
+    // Check if 24-hour session has expired
+    if (loginTime && Date.now() - Number(loginTime) > 24 * 60 * 60 * 1000) {
+      localStorage.removeItem('auth_pass');
+      localStorage.removeItem('auth_login_time');
+      return false;
+    }
+    return true;
   });
 
   const [theme, setTheme] = useState(() => localStorage.getItem('lm-theme') || 'dark');
   const [open,  setOpen]  = useState(true);
 
+  // Auto-logout when backend API returns 401
   useEffect(() => {
-    if (!isAuthenticated) {
-      const pass = window.prompt("Enter password to access Life Manager:");
-      const correctPass = import.meta.env.VITE_APP_PASSWORD;
-      if (pass === correctPass) {
-        localStorage.setItem('auth_pass', pass);
-        setIsAuthenticated(true);
-      } else if (pass !== null) {
-        alert("Incorrect password. Please refresh the page to try again.");
-      }
-    }
-  }, [isAuthenticated]);
+    const handleUnauthorized = () => {
+      setIsAuthenticated(false);
+    };
+    window.addEventListener('auth-unauthorized', handleUnauthorized);
+    return () => window.removeEventListener('auth-unauthorized', handleUnauthorized);
+  }, []);
 
-  // Apply theme to <html> immediately and on change
+  // Apply theme to HTML
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     document.body.setAttribute('data-theme', theme);
     localStorage.setItem('lm-theme', theme);
   }, [theme]);
 
-  // On mount, also check if profile has a saved theme preference
+  // Sync saved theme preference on mount
   useEffect(() => {
     const saved = localStorage.getItem('lm-theme');
     if (saved && saved !== theme) {
@@ -56,19 +141,7 @@ export default function App() {
   const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
 
   if (!isAuthenticated) {
-    return (
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100vh',
-        background: 'var(--bg-base)',
-        color: 'var(--text-primary)',
-        fontFamily: 'var(--font-sans)'
-      }}>
-        <h2>Access Denied</h2>
-      </div>
-    );
+    return <LoginScreen onLoginSuccess={() => setIsAuthenticated(true)} />;
   }
 
   return (

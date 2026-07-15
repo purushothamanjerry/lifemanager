@@ -6,6 +6,29 @@ const baseURL = rawApiUrl
   : '/api';
 const API = axios.create({ baseURL });
 
+// Request interceptor: inject authorization token from localStorage
+API.interceptors.request.use((config) => {
+  const token = localStorage.getItem('auth_pass') || '';
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
+// Response interceptor: watch for 401 Unauthorized responses to prompt re-login
+API.interceptors.response.use((response) => {
+  return response;
+}, (error) => {
+  if (error.response && error.response.status === 401) {
+    localStorage.removeItem('auth_pass');
+    localStorage.removeItem('auth_login_time');
+    window.dispatchEvent(new Event('auth-unauthorized'));
+  }
+  return Promise.reject(error);
+});
+
 export const getImageUrl = (path) => {
   if (!path) return '';
   if (path.startsWith('http') || path.startsWith('data:')) return path;
