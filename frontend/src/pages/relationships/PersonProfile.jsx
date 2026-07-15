@@ -10,6 +10,7 @@ import 'react-image-crop/dist/ReactCrop.css';
 
 const TYPE_META = {
   love:         { color:'#e8637a', bg:'rgba(232,99,122,0.12)', emoji:'❤️' },
+  'one-sided-love': { color:'#f43f5e', bg:'rgba(244,63,94,0.12)',  emoji:'🥀' },
   crush:        { color:'#f472b6', bg:'rgba(244,114,182,0.12)',emoji:'🌸' },
   attracted:    { color:'#fb923c', bg:'rgba(251,146,60,0.12)', emoji:'✨' },
   impressed:    { color:'#fbbf24', bg:'rgba(251,191,36,0.12)', emoji:'🌟' },
@@ -173,7 +174,7 @@ export default function PersonProfile() {
 
   const tm = TYPE_META[person.relationshipType] || TYPE_META.acquaintance;
   const sm = STATUS_META[person.currentStatus]  || STATUS_META.good;
-  const isSpecial = ['love','crush','attracted','impressed'].includes(person.relationshipType);
+  const isSpecial = ['love','one-sided-love','crush','attracted','impressed'].includes(person.relationshipType);
   const daysSince = person.lastConversationDate ? differenceInDays(now, new Date(person.lastConversationDate)) : null;
   const displayAge = person.age;
   const hasDOB = !!person.dateOfBirth;

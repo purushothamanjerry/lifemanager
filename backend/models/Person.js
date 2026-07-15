@@ -21,7 +21,7 @@ const PersonSchema = new mongoose.Schema({
 
   relationshipType: {
     type: String,
-    enum: ['love','crush','attracted','impressed','friend','family','colleague','classmate','teacher','acquaintance','one-time'],
+    enum: ['love','one-sided-love','crush','attracted','impressed','friend','family','colleague','classmate','teacher','acquaintance','one-time'],
     required: true,
     default: 'friend'
   },

@@ -17,6 +17,7 @@ const INIT = {
 
 const REL_TYPES = [
   { value:'love',         emoji:'❤️',  label:'Love',          desc:'Romantic partner'   },
+  { value:'one-sided-love', emoji:'🥀', label:'One-sided Love', desc:'Unrequited feelings'},
   { value:'crush',        emoji:'🌸',  label:'Crush',         desc:'Have feelings for'  },
   { value:'attracted',    emoji:'✨',  label:'Attracted To',  desc:'Physically drawn to'},
   { value:'impressed',    emoji:'🌟',  label:'Impressed By',  desc:'Deeply admire'      },
@@ -48,7 +49,7 @@ const HAIR_LENGTHS = ['Bald','Very Short','Short','Medium','Long','Very Long'];
 const BODY_TYPES = ['Slim','Lean','Athletic','Average','Curvy','Heavyset'];
 
 const LINK_TYPES = [
-  'boyfriend','girlfriend','bestfriend','close friend','sibling',
+  'boyfriend','girlfriend','bestfriend','close friend','crush','one-sided love','sibling',
   'cousin','ex','colleague','roommate','mentor','classmate','other'
 ];
 
