@@ -7,10 +7,8 @@ const NAV = [
   { path: '/relationships', icon: '◎',  label: 'Relationships' },
   { path: '/notes',         icon: '✦',  label: 'Notes'         },
   { path: '/memories',      icon: '◈',  label: 'Memories'      },
-  { path: '/plans',         icon: '◇',  label: 'Plans'         },
-  { path: '/finance',       icon: '₹',  label: 'Finance'       },
   { path: '/health',        icon: '♡',  label: 'Health'        },
-  { path: '/activity',      icon: '⏱',  label: 'Activity'      },
+  { path: '/links',         icon: '🔗', label: 'Links'         },
 ];
 
 export default function Sidebar({ open, onToggle, theme, onThemeToggle }) {

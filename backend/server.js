@@ -41,11 +41,9 @@ app.use('/api/people', require('./routes/people'));
 app.use('/api/conversations', require('./routes/conversations'));
 app.use('/api/notes', require('./routes/notes'));
 app.use('/api/memories', require('./routes/memories'));
-app.use('/api/plans', require('./routes/plans'));
-app.use('/api/finance', require('./routes/finance'));
 app.use('/api/profile', require('./routes/profile'));
-app.use('/api/activities', require('./routes/activities'));
 app.use('/api/health', require('./routes/health'));
+app.use('/api/links', require('./routes/links'));
 
 // Server ping
 app.get('/api/ping', (req, res) => res.json({ status: 'ok', timestamp: new Date() }));

@@ -140,54 +140,25 @@ router.get('/stats', async (req, res) => {
     const Memory      = safeLoad('../models/Memory');
     const Note        = safeLoad('../models/Note');
     const Person      = safeLoad('../models/Person');
-    const Plan        = safeLoad('../models/Plan');
-    const Transaction = safeLoad('../models/Transaction');
-    const Activity    = safeLoad('../models/Activity');
+    const Link        = safeLoad('../models/Link');
     const HealthLog   = safeLoad('../models/HealthLog');
 
     const results = await Promise.allSettled([
-      Memory      ? Memory.countDocuments()                                                                     : Promise.resolve(0),
-      Note        ? Note.countDocuments()                                                                       : Promise.resolve(0),
-      Person      ? Person.countDocuments()                                                                     : Promise.resolve(0),
-      Plan        ? Plan.countDocuments({ status: 'done' })                                                    : Promise.resolve(0),
-      Transaction ? Transaction.find({ type: 'expense', isTransfer: { $ne: true } }).select('amount quantity') : Promise.resolve([]),
-      Activity    ? Activity.find({ endTime: { $exists: true, $ne: '' } }).select('startTime endTime productive') : Promise.resolve([]),
-      HealthLog   ? HealthLog.countDocuments()                                                                  : Promise.resolve(0),
+      Memory    ? Memory.countDocuments()    : Promise.resolve(0),
+      Note      ? Note.countDocuments()      : Promise.resolve(0),
+      Person    ? Person.countDocuments()    : Promise.resolve(0),
+      Link      ? Link.countDocuments()      : Promise.resolve(0),
+      HealthLog ? HealthLog.countDocuments() : Promise.resolve(0),
     ]);
 
     const val = (r, fallback) => r.status === 'fulfilled' ? r.value : fallback;
 
-    const transactions = val(results[4], []);
-    const activities   = val(results[5], []);
-
-    const totalExpenses = Array.isArray(transactions)
-      ? transactions.reduce((s, t) => s + (Number(t.amount) || 0) * (Number(t.quantity) || 1), 0)
-      : 0;
-
-    const toMins = (s, e) => {
-      if (!s || !e) return 0;
-      try {
-        const [sh, sm] = s.split(':').map(Number);
-        const [eh, em] = e.split(':').map(Number);
-        let d = (eh * 60 + em) - (sh * 60 + sm);
-        if (d < 0) d += 1440;
-        return d;
-      } catch { return 0; }
-    };
-
-    const prodMins = Array.isArray(activities)
-      ? activities.filter(a => a.productive).reduce((s, a) => s + toMins(a.startTime, a.endTime), 0)
-      : 0;
-
     res.json({
-      memories:          val(results[0], 0),
-      notes:             val(results[1], 0),
-      people:            val(results[2], 0),
-      plansCompleted:    val(results[3], 0),
-      totalExpenses,
-      productivityHours: Math.round(prodMins / 60 * 10) / 10,
-      healthLogs:        val(results[6], 0),
-      totalActivities:   Array.isArray(activities) ? activities.length : 0,
+      memories:   val(results[0], 0),
+      notes:      val(results[1], 0),
+      people:     val(results[2], 0),
+      links:      val(results[3], 0),
+      healthLogs: val(results[4], 0),
     });
   } catch(e) {
     console.error('GET /profile/stats error:', e.message);
@@ -196,31 +167,27 @@ router.get('/stats', async (req, res) => {
 });
 
 // ── GET recent activity feed ──────────────────────────────────────
-// NOTE: Conversation model uses field `person` (not `personId`)
 router.get('/recent', async (req, res) => {
   try {
-    const Memory      = safeLoad('../models/Memory');
-    const Note        = safeLoad('../models/Note');
-    const Plan        = safeLoad('../models/Plan');
-    const Transaction = safeLoad('../models/Transaction');
-    const Convo       = safeLoad('../models/Conversation');
+    const Memory = safeLoad('../models/Memory');
+    const Note   = safeLoad('../models/Note');
+    const Convo  = safeLoad('../models/Conversation');
+    const Link   = safeLoad('../models/Link');
 
     const results = await Promise.allSettled([
-      Memory      ? Memory.find().sort({ createdAt: -1 }).limit(5).select('title emotion createdAt')                                       : Promise.resolve([]),
-      Note        ? Note.find().sort({ createdAt: -1 }).limit(5).select('title createdAt')                                                 : Promise.resolve([]),
-      Plan        ? Plan.find({ status: 'done' }).sort({ completedAt: -1 }).limit(5).select('title completedAt createdAt')                 : Promise.resolve([]),
-      Transaction ? Transaction.find({ type: 'expense', isTransfer: { $ne: true } }).sort({ createdAt: -1 }).limit(5).select('itemName amount category createdAt') : Promise.resolve([]),
-      Convo       ? Convo.find().sort({ createdAt: -1 }).limit(5).select('summary createdAt person').populate('person', 'name')            : Promise.resolve([]),
+      Memory ? Memory.find().sort({ createdAt: -1 }).limit(5).select('title emotion createdAt') : Promise.resolve([]),
+      Note   ? Note.find().sort({ createdAt: -1 }).limit(5).select('title createdAt')           : Promise.resolve([]),
+      Convo  ? Convo.find().sort({ createdAt: -1 }).limit(5).select('summary createdAt person').populate('person', 'name') : Promise.resolve([]),
+      Link   ? Link.find().sort({ createdAt: -1 }).limit(5).select('name source customSource url createdAt') : Promise.resolve([]),
     ]);
 
     const arr = (r) => (r.status === 'fulfilled' && Array.isArray(r.value)) ? r.value : [];
 
     const feed = [
-      ...arr(results[0]).map(m => ({ type: 'memory',  icon: '◈', color: 'var(--violet)', label: m.title || 'Memory',           sub: m.emotion || 'memory',                   ts: m.createdAt })),
-      ...arr(results[1]).map(n => ({ type: 'note',    icon: '✦', color: 'var(--teal)',   label: n.title || 'Untitled note',    sub: 'Note',                                  ts: n.createdAt })),
-      ...arr(results[2]).map(p => ({ type: 'plan',    icon: '◇', color: 'var(--gold)',   label: p.title || 'Plan',             sub: 'Plan completed',                         ts: p.completedAt || p.createdAt })),
-      ...arr(results[3]).map(t => ({ type: 'expense', icon: '₹', color: 'var(--rose)',   label: t.itemName || 'Expense',       sub: '₹' + t.amount + ' · ' + (t.category||''), ts: t.createdAt })),
-      ...arr(results[4]).map(c => ({ type: 'convo',   icon: '◎', color: 'var(--blue)',   label: c.person?.name || 'Someone',   sub: c.summary || 'Conversation logged',       ts: c.createdAt })),
+      ...arr(results[0]).map(m => ({ type: 'memory', icon: '◈', color: 'var(--violet)', label: m.title || 'Memory', sub: m.emotion || 'memory', ts: m.createdAt })),
+      ...arr(results[1]).map(n => ({ type: 'note',   icon: '✦', color: 'var(--teal)',   label: n.title || 'Untitled note', sub: 'Note', ts: n.createdAt })),
+      ...arr(results[2]).map(c => ({ type: 'convo',  icon: '◎', color: 'var(--blue)',   label: c.person?.name || 'Someone', sub: c.summary || 'Conversation logged', ts: c.createdAt })),
+      ...arr(results[3]).map(l => ({ type: 'link',   icon: '🔗', color: 'var(--violet)', label: l.name || 'Link', sub: l.source === 'Other' ? (l.customSource || 'Custom source') : l.source, ts: l.createdAt })),
     ]
       .filter(item => item.ts)
       .sort((a, b) => new Date(b.ts) - new Date(a.ts))

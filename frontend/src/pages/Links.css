@@ -1,0 +1,403 @@
+/* ─── Links Page Container ────────────────────────────────────────────────── */
+.links-page {
+  padding: 30px 40px;
+  max-width: 1300px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.links-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.links-header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text-1);
+  margin-bottom: 4px;
+}
+
+.links-header p {
+  font-size: 0.9rem;
+  color: var(--text-3);
+}
+
+/* ─── Controls/Filters ───────────────────────────────────────────────────── */
+.links-controls {
+  margin-bottom: 30px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.links-search-wrap {
+  position: relative;
+  flex: 1;
+  max-width: 500px;
+}
+
+.links-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.95rem;
+  color: var(--text-3);
+}
+
+.links-search {
+  width: 100%;
+  padding: 12px 40px 12px 40px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  color: var(--text-1);
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.links-search:focus {
+  border-color: var(--accent, var(--violet));
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+  outline: none;
+}
+
+.links-search-clear {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-3);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.links-search-clear:hover {
+  background: var(--bg-hover);
+  color: var(--text-1);
+}
+
+/* ─── Grid & Cards ───────────────────────────────────────────────────────── */
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.link-card {
+  position: relative;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 180px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+              border-color 0.3s ease, 
+              box-shadow 0.3s ease;
+}
+
+.link-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--accent-color, var(--violet));
+  opacity: 0.7;
+}
+
+.link-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-color, var(--violet));
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3),
+              0 0 15px 0px rgba(var(--accent-color), 0.1);
+}
+
+/* Subtle background glow on card hover */
+.link-card-glow {
+  position: absolute;
+  bottom: -50px;
+  right: -50px;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+  opacity: 0.03;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.link-card:hover .link-card-glow {
+  opacity: 0.1;
+  transform: scale(1.2);
+}
+
+/* Card Header */
+.link-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.link-source-icon-wrap {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.link-favicon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  z-index: 2;
+}
+
+.link-fallback-emoji {
+  font-size: 1.2rem;
+  z-index: 1;
+}
+
+/* Badge */
+.link-source-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+/* Card Body */
+.link-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.link-name {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-1);
+  margin: 0;
+  line-height: 1.3;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.link-url-text {
+  font-size: 0.8rem;
+  color: var(--accent-color, var(--violet));
+  font-family: monospace;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.link-about {
+  font-size: 0.88rem;
+  color: var(--text-3);
+  margin: 4px 0 0 0;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Card Actions */
+.link-card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  justify-content: flex-end;
+  opacity: 0.2;
+  transition: opacity 0.25s ease;
+}
+
+.link-card:hover .link-card-actions {
+  opacity: 1;
+}
+
+.link-action-btn {
+  background: var(--bg-base);
+  border: 1px solid var(--border-color);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.link-action-btn:hover {
+  background: var(--bg-hover);
+}
+
+.link-action-btn.edit:hover {
+  border-color: var(--blue);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.2);
+}
+
+.link-action-btn.delete:hover {
+  border-color: var(--rose);
+  box-shadow: 0 0 8px rgba(244, 114, 182, 0.2);
+}
+
+/* ─── State layouts ──────────────────────────────────────────────────────── */
+.links-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+}
+
+.links-empty {
+  text-align: center;
+  padding: 60px 20px;
+  max-width: 400px;
+  margin: 40px auto;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.links-empty-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  color: var(--text-3);
+  opacity: 0.5;
+}
+
+.links-empty h3 {
+  font-size: 1.25rem;
+  color: var(--text-1);
+  margin-bottom: 8px;
+}
+
+.links-empty p {
+  font-size: 0.9rem;
+  color: var(--text-3);
+}
+
+/* ─── Modal styling ──────────────────────────────────────────────────────── */
+.link-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.link-modal-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  width: 90%;
+  max-width: 520px;
+  padding: 32px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.link-modal-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: var(--text-1);
+}
+
+.link-modal-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  margin-bottom: 20px;
+}
+
+.link-modal-overlay .form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.link-modal-overlay .flex-1 {
+  flex: 1;
+}
+
+.link-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* ─── Animation Keyframes ────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ─── Responsive adjustments ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .links-page {
+    padding: 20px 16px;
+  }
+  .links-header h1 {
+    font-size: 1.8rem;
+  }
+  .links-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .links-search-wrap {
+    max-width: none;
+  }
+  .link-modal-overlay .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

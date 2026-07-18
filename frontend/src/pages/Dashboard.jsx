@@ -9,9 +9,8 @@ const MODULES = [
   { path:'/relationships', icon:'◎', label:'Relationships', color:'var(--rose)',   desc:'People & bonds'     },
   { path:'/notes',         icon:'✦', label:'Notes',         color:'var(--teal)',   desc:'Thoughts & ideas'   },
   { path:'/memories',      icon:'◈', label:'Memories',      color:'var(--violet)', desc:'Precious moments'   },
-  { path:'/plans',         icon:'◇', label:'Plans',         color:'var(--gold)',   desc:'Goals & milestones' },
-  { path:'/finance',       icon:'◉', label:'Finance',       color:'var(--teal)',   desc:'Money & budgets'    },
   { path:'/health',        icon:'♡', label:'Health',        color:'var(--rose)',   desc:'Body & wellness'    },
+  { path:'/links',         icon:'🔗', label:'Links',         color:'var(--violet)', desc:'Bookmarks & links'  },
   { path:'/timeline',      icon:'⊞', label:'Timeline',      color:'var(--blue)',   desc:'Life events'        },
 ];
 

@@ -7,10 +7,8 @@ import Relationships from './pages/relationships/Relationships.jsx';
 import PersonProfile from './pages/relationships/PersonProfile.jsx';
 import Notes from './pages/Notes.jsx';
 import Memories from './pages/Memories.jsx';
-import Plans from './pages/Plans.jsx';
-import Finance from './pages/Finance.jsx';
 import Health from './pages/Health.jsx';
-import Activity from './pages/Activity.jsx';
+import Links from './pages/Links.jsx';
 import Profile from './pages/Profile.jsx';
 import { profileApi, authApi } from './utils/api.js';
 import './styles/global.css';
@@ -209,10 +207,8 @@ export default function App() {
             <Route path="/relationships/:id" element={<PersonProfile />} />
             <Route path="/notes"             element={<Notes />} />
             <Route path="/memories"          element={<Memories />} />
-            <Route path="/plans"             element={<Plans />} />
-            <Route path="/finance"           element={<Finance />} />
             <Route path="/health"            element={<Health />} />
-            <Route path="/activity"          element={<Activity />} />
+            <Route path="/links"             element={<Links />} />
             <Route path="/profile"           element={<Profile theme={theme} onThemeChange={setTheme} />} />
           </Routes>
         </main>

@@ -27,10 +27,8 @@ const PAGES = [
   { path:'/relationships', label:'Relationships' },
   { path:'/notes',         label:'Notes'         },
   { path:'/memories',      label:'Memories'      },
-  { path:'/plans',         label:'Plans'         },
-  { path:'/finance',       label:'Finance'       },
   { path:'/health',        label:'Health'        },
-  { path:'/activity',      label:'Activity'      },
+  { path:'/links',         label:'Links'         },
 ];
 const PERSONALITY_OPTS = ['Introvert','Extrovert','Ambivert','Analytical','Creative','Empathetic','Leader','Adventurous','Organized','Spontaneous','Reserved','Outgoing'];
 const HOBBY_SUGGESTIONS = ['Reading','Photography','Gaming','Cooking','Travelling','Music','Art','Writing','Fitness','Yoga','Cycling','Swimming','Hiking','Movies','Dancing'];
@@ -471,11 +469,8 @@ export default function Profile({ theme: appTheme, onThemeChange }) {
             <StatCard icon="◈" label="Memories"    value={stats?.memories}          color="var(--violet)" onClick={()=>navigate('/memories')}/>
             <StatCard icon="✦" label="Notes"        value={stats?.notes}             color="var(--teal)"   onClick={()=>navigate('/notes')}/>
             <StatCard icon="◎" label="Relationships"value={stats?.people}            color="var(--blue)"   onClick={()=>navigate('/relationships')}/>
-            <StatCard icon="◇" label="Plans Done"   value={stats?.plansCompleted}    color="var(--gold)"   onClick={()=>navigate('/plans')}/>
-            <StatCard icon="⚡" label="Prod. Hours"  value={stats?.productivityHours} color="var(--teal)"   onClick={()=>navigate('/activity')}/>
-            <StatCard icon="◉" label="Total Spent"  value={fmtCurrency(stats?.totalExpenses, form.currency||'INR')} color="var(--rose)" onClick={()=>navigate('/finance')}/>
             <StatCard icon="♡" label="Health Logs"  value={stats?.healthLogs}        color="var(--rose)"   onClick={()=>navigate('/health')}/>
-            <StatCard icon="⏱" label="Activities"   value={stats?.totalActivities}   color="var(--amber)"  onClick={()=>navigate('/activity')}/>
+            <StatCard icon="🔗" label="Links Saved"  value={stats?.links}             color="var(--violet)" onClick={()=>navigate('/links')}/>
           </div>
         </Section>
 
@@ -598,7 +593,7 @@ export default function Profile({ theme: appTheme, onThemeChange }) {
               { key:'hideRelationships', label:'Relationships', icon:'◎', color:'var(--blue)'   },
               { key:'hideMemories',      label:'Memories',      icon:'◈', color:'var(--violet)' },
               { key:'hideNotes',         label:'Notes',         icon:'✦', color:'var(--teal)'   },
-              { key:'hideFinance',       label:'Finance',       icon:'◉', color:'var(--rose)'   },
+              { key:'hideLinks',         label:'Links',         icon:'🔗', color:'var(--violet)' },
               { key:'hideHealth',        label:'Health',        icon:'♡', color:'var(--rose)'   },
               { key:'hideAnalytics',     label:'Analytics',     icon:'⊞', color:'var(--gold)'   },
             ].map(item => (

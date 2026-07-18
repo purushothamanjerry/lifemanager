@@ -77,28 +77,12 @@ export const memoriesApi = {
   deletePhoto: (id, idx)  => API.delete(`/memories/${id}/photos/${idx}`),
 };
 
-export const plansApi = {
-  getAll:         (params)     => API.get('/plans', { params }),
-  getById:        (id)         => API.get(`/plans/${id}`),
-  getStats:       (params)     => API.get('/plans/meta/stats', { params }),
-  create:         (data)       => API.post('/plans', data),
-  update:         (id, data)   => API.put(`/plans/${id}`, data),
-  setStatus:      (id, status) => API.patch(`/plans/${id}/status`, { status }),
-  reschedule:     (id, data)   => API.patch(`/plans/${id}/reschedule`, data),
-  delete:         (id)         => API.delete(`/plans/${id}`),
-  checkConflicts: (data)       => API.post('/plans/check-conflicts', data),
-};
-
-export const financeApi = {
-  getTransactions:  (params)        => API.get('/finance/transactions', { params }),
-  getTransaction:   (id)            => API.get(`/finance/transactions/${id}`),
-  create:           (data)          => API.post('/finance/transactions', data),
-  update:           (id, data)      => API.put(`/finance/transactions/${id}`, data),
-  delete:           (id)            => API.delete(`/finance/transactions/${id}`),
-  getAnalytics:     (params)        => API.get('/finance/analytics', { params }),
-  getMonthlyOverview:(params)       => API.get('/finance/monthly-overview', { params }),
-  getAccounts:      ()              => API.get('/finance/accounts'),
-  updateAccount:    (method, data)  => API.put(`/finance/accounts/${method}`, data),
+export const linksApi = {
+  getAll: (params) => API.get('/links', { params }),
+  getById: (id) => API.get(`/links/${id}`),
+  create: (data) => API.post('/links', data),
+  update: (id, data) => API.put(`/links/${id}`, data),
+  delete: (id) => API.delete(`/links/${id}`),
 };
 
 export const healthApi = {
@@ -110,15 +94,6 @@ export const healthApi = {
   deleteFood:    (date, foodId)   => API.delete(`/health/logs/${date}/food/${foodId}`),
   getAnalytics:  (params)         => API.get('/health/analytics', { params }),
   getProfile:    ()               => API.get('/health/profile'),
-};
-
-export const activityApi = {
-  getAll:       (params)      => API.get('/activities', { params }),
-  getById:      (id)          => API.get(`/activities/${id}`),
-  create:       (data)        => API.post('/activities', data),
-  update:       (id, data)    => API.put(`/activities/${id}`, data),
-  delete:       (id)          => API.delete(`/activities/${id}`),
-  getAnalytics: (params)      => API.get('/activities/meta/analytics', { params }),
 };
 
 export const profileApi = {

@@ -16,6 +16,5 @@ export const link = {
   noteTag:      (tag)      => `/notes?tag=${encodeURIComponent(tag)}`,
   personMemories:(id)      => `/memories?person=${id}`,
   personNotes:  (id)       => `/notes?person=${id}`,
-  plans:        (date)     => date ? `/plans?date=${date}` : `/plans`,
-  plansToday:   ()         => `/plans`,
+  links:        ()         => `/links`,
 };
