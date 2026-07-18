@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
 import Sidebar from './components/layout/Sidebar.jsx';
 import PanicButton from './components/PanicButton.jsx';
 import Dashboard from './pages/Dashboard.jsx';
@@ -99,7 +99,7 @@ export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [theme, setTheme] = useState(() => localStorage.getItem('lm-theme') || 'dark');
-  const [open,  setOpen]  = useState(true);
+  const [open,  setOpen]  = useState(() => window.innerWidth > 768);
 
   // Sync saved session on mount and query backend auth status
   useEffect(() => {
@@ -189,16 +189,20 @@ export default function App() {
 
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <div style={{ display:'flex', minHeight:'100vh' }}>
+      <div className="app-container">
+        {/* Mobile Header Navbar */}
+        <header className="mobile-navbar">
+          <button className="mobile-menu-btn" onClick={() => setOpen(true)} title="Open Menu">☰</button>
+          <div className="mobile-navbar-logo">life<span>mgr</span></div>
+          <NavLink to="/profile" className="mobile-profile-btn" title="My Profile">◉</NavLink>
+        </header>
+
         <Sidebar open={open} onToggle={() => setOpen(o => !o)} theme={theme} onThemeToggle={toggleTheme} />
-        <main style={{
-          flex: 1,
-          marginLeft: open ? 'var(--sidebar-w)' : 'var(--sidebar-collapsed-w)',
-          transition: 'margin-left 0.3s cubic-bezier(0.4,0,0.2,1)',
-          minHeight: '100vh',
-          overflow: 'auto',
-          background: 'var(--bg-base)',
-        }}>
+        
+        {/* Backdrop for mobile drawer closing */}
+        {open && <div className="sidebar-backdrop" onClick={() => setOpen(false)} />}
+        
+        <main className={`main-content ${open ? 'sidebar-open' : 'sidebar-collapsed'}`}>
           <Routes>
             <Route path="/"                  element={<Dashboard />} />
             <Route path="/relationships"     element={<Relationships />} />

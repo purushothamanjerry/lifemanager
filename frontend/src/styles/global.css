@@ -265,3 +265,110 @@ label {
 
 /* Disable grain in light mode */
 [data-theme="light"] body::before { opacity: 0; }
+
+/* ── App Container and Main Layout ── */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--bg-base);
+  transition: margin-left 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+.main-content.sidebar-open {
+  margin-left: var(--sidebar-w);
+}
+
+.main-content.sidebar-collapsed {
+  margin-left: var(--sidebar-collapsed-w);
+}
+
+/* Sidebar Backdrop for mobile */
+.sidebar-backdrop {
+  display: none;
+}
+
+/* Mobile sticky navbar */
+.mobile-navbar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+  
+  .mobile-navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    padding: 0 16px;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border-dim);
+    position: sticky;
+    top: 0;
+    z-index: 150;
+  }
+
+  .mobile-navbar-logo {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text-1);
+    white-space: nowrap;
+  }
+  .mobile-navbar-logo span {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  .mobile-menu-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-1);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+  }
+
+  .mobile-profile-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), #c49340);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #080800;
+    text-decoration: none;
+  }
+
+  .main-content.sidebar-open,
+  .main-content.sidebar-collapsed {
+    margin-left: 0 !important;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 199;
+    animation: fadeIn 0.25s ease;
+  }
+}

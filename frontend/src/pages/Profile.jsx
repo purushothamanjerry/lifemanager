@@ -197,6 +197,7 @@ export default function Profile({ theme: appTheme, onThemeChange }) {
   const [pinAction,     setPinAction]     = useState(null); // what to do after verify
   const [pinMsg,        setPinMsg]        = useState('');
   const [activeSection, setActiveSection] = useState('overview');
+  const [showPhoto,     setShowPhoto]     = useState(false);
 
   // Photo upload
   const photoRef = useRef();
@@ -323,7 +324,11 @@ export default function Profile({ theme: appTheme, onThemeChange }) {
               {/* Photo */}
               <div className="hero-photo-wrap">
                 <div className="hero-photo"
-                  style={hasPhoto ? { backgroundImage: `url(${getImageUrl(profile.profilePhoto)})` } : {}}>
+                  onClick={() => hasPhoto && setShowPhoto(true)}
+                  style={{
+                    ...(hasPhoto ? { backgroundImage: `url(${getImageUrl(profile.profilePhoto)})` } : {}),
+                    cursor: hasPhoto ? 'pointer' : 'default'
+                  }}>
                   {!hasPhoto && <span className="hero-photo-initial">
                     {(form.fullName||form.nickname||'?')[0]?.toUpperCase()}
                   </span>}
@@ -766,6 +771,50 @@ export default function Profile({ theme: appTheme, onThemeChange }) {
           confirmLabel="Set PIN"
           onConfirm={handleSetPin}
           onCancel={()=>setShowSetPin(false)}/>
+      )}
+
+      {/* ── Photo Lightbox ── */}
+      {showPhoto && profile.profilePhoto && (
+        <div
+          onClick={() => setShowPhoto(false)}
+          style={{
+            position:'fixed', inset:0,
+            background:'rgba(0,0,0,0.92)',
+            display:'flex', alignItems:'center', justifyContent:'center',
+            zIndex:9999, cursor:'zoom-out', padding:20,
+          }}>
+          <div style={{position:'relative'}}>
+            <img
+              src={getImageUrl(profile.profilePhoto)}
+              alt={form.fullName}
+              onClick={e => e.stopPropagation()}
+              style={{
+                maxWidth:'88vw', maxHeight:'88vh',
+                borderRadius:16, objectFit:'contain',
+                boxShadow:'0 0 80px rgba(0,0,0,0.9)',
+                cursor:'default',
+              }}
+            />
+            {/* Close button */}
+            <button
+              onClick={() => setShowPhoto(false)}
+              style={{
+                position:'absolute', top:-14, right:-14,
+                width:36, height:36, borderRadius:'50%',
+                background:'rgba(255,255,255,0.15)',
+                border:'1px solid rgba(255,255,255,0.3)',
+                color:'white', fontSize:'1rem', cursor:'pointer',
+                display:'flex', alignItems:'center', justifyContent:'center',
+                backdropFilter:'blur(8px)',
+              }}>✕</button>
+            {/* Name label */}
+            <div style={{
+              position:'absolute', bottom:-32, left:0, right:0,
+              textAlign:'center', color:'rgba(255,255,255,0.75)',
+              fontSize:'0.85rem', fontWeight:600,
+            }}>{form.fullName}</div>
+          </div>
+        </div>
       )}
     </div>
   );

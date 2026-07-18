@@ -201,41 +201,41 @@ export default function PersonProfile() {
         <div className="pp-hero-left">
 
           {/* ── Avatar ── */}
-          <div className="pp-avatar-wrap" onClick={(e) => { if(!e.target.closest('.pp-avatar-action')) document.getElementById('avatar-upload').click(); }} style={{cursor: 'pointer'}}>
-            {person.profilePhoto && !imgError ? (
-              <img
-                src={getImageUrl(person.profilePhoto)}
-                alt={person.name}
-                className="pp-avatar"
-                onError={() => setImgError(true)}
-              />
-            ) : (
-              <div className="pp-avatar-ph" style={{background:tm.bg,color:tm.color}}>
-                {getInitials(person.name)}
-              </div>
-            )}
-            
-            <div className="pp-avatar-overlay">
-              {person.profilePhoto && !imgError && (
-                <button 
-                  className="pp-avatar-action" 
-                  onClick={(e) => { e.stopPropagation(); setShowPhoto(true); }}
-                  title="View Photo"
-                >
-                  👁️
-                </button>
-              )}
-              <label className="pp-avatar-action" title="Upload Photo" onClick={(e) => e.stopPropagation()}>
-                <input 
-                  id="avatar-upload"
-                  type="file" 
-                  accept="image/*" 
-                  style={{display:'none'}} 
-                  onChange={handlePhotoUpload} 
+          <div className="pp-avatar-wrap">
+            <div 
+              onClick={() => {
+                if (person.profilePhoto && !imgError) {
+                  setShowPhoto(true);
+                } else {
+                  document.getElementById('avatar-upload').click();
+                }
+              }}
+              style={{ cursor: 'pointer' }}
+            >
+              {person.profilePhoto && !imgError ? (
+                <img
+                  src={getImageUrl(person.profilePhoto)}
+                  alt={person.name}
+                  className="pp-avatar"
+                  onError={() => setImgError(true)}
                 />
-                📷
-              </label>
+              ) : (
+                <div className="pp-avatar-ph" style={{background:tm.bg,color:tm.color}}>
+                  {getInitials(person.name)}
+                </div>
+              )}
             </div>
+            
+            <label className="pp-avatar-edit-btn" title="Upload Photo" onClick={(e) => e.stopPropagation()}>
+              <input 
+                id="avatar-upload"
+                type="file" 
+                accept="image/*" 
+                style={{display:'none'}} 
+                onChange={handlePhotoUpload} 
+              />
+              📷
+            </label>
 
             {isSpecial && <div className="pp-avatar-ring" style={{borderColor:tm.color}}/>}
             {isBirthdayToday && <div className="pp-bday-badge">🎂</div>}
