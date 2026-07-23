@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { peopleApi, conversationsApi, memoriesApi, getImageUrl } from '../../utils/api.js';
 import PersonForm from './PersonForm.jsx';
+import ConfirmLinkModal from '../../components/ConfirmLinkModal.jsx';
 import { differenceInDays, differenceInYears, format, addYears, isBefore } from 'date-fns';
 import './PersonProfile.css';
 import { link } from '../../utils/links.js';
@@ -80,11 +81,17 @@ export default function PersonProfile() {
   const [showConvo, setShowConvo] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [pendingLink, setPendingLink] = useState(null);
   const [newConvo, setNewConvo]   = useState({ date:'', place:'', summary:'', mood:'good' });
   const [isFav, setIsFav]         = useState(false);
   const [showPhoto, setShowPhoto] = useState(false); // ← lightbox state
   const [imgError, setImgError]   = useState(false);
   const now = new Date();
+
+  const handleContactLinkClick = (e, url, name) => {
+    e.preventDefault();
+    setPendingLink({ url, name });
+  };
 
   const load = async () => {
     try {
@@ -543,19 +550,43 @@ export default function PersonProfile() {
                   {person.instagramId && (
                     <div className="pp-contact-row">
                       <span className="pp-contact-icon">📸</span>
-                      <a href={`https://instagram.com/${person.instagramId}`} target="_blank" rel="noreferrer" className="pp-contact-val">@{person.instagramId}</a>
+                      <a 
+                        href={`https://instagram.com/${person.instagramId}`} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        className="pp-contact-val"
+                        onClick={(e) => handleContactLinkClick(e, `https://instagram.com/${person.instagramId}`, `Instagram (@${person.instagramId})`)}
+                      >
+                        @{person.instagramId}
+                      </a>
                     </div>
                   )}
                   {person.linkedinId && (
                     <div className="pp-contact-row">
                       <span className="pp-contact-icon">💼</span>
-                      <a href={`https://linkedin.com/in/${person.linkedinId}`} target="_blank" rel="noreferrer" className="pp-contact-val">in/{person.linkedinId}</a>
+                      <a 
+                        href={`https://linkedin.com/in/${person.linkedinId}`} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        className="pp-contact-val"
+                        onClick={(e) => handleContactLinkClick(e, `https://linkedin.com/in/${person.linkedinId}`, `LinkedIn (in/${person.linkedinId})`)}
+                      >
+                        in/{person.linkedinId}
+                      </a>
                     </div>
                   )}
                   {person.twitterId && (
                     <div className="pp-contact-row">
                       <span className="pp-contact-icon">🐦</span>
-                      <a href={`https://twitter.com/${person.twitterId}`} target="_blank" rel="noreferrer" className="pp-contact-val">@{person.twitterId}</a>
+                      <a 
+                        href={`https://twitter.com/${person.twitterId}`} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        className="pp-contact-val"
+                        onClick={(e) => handleContactLinkClick(e, `https://twitter.com/${person.twitterId}`, `X / Twitter (@${person.twitterId})`)}
+                      >
+                        @{person.twitterId}
+                      </a>
                     </div>
                   )}
                   {person.snapchatId && (
@@ -885,6 +916,18 @@ export default function PersonProfile() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Link Confirmation Modal */}
+      {pendingLink && (
+        <ConfirmLinkModal
+          link={pendingLink}
+          onConfirm={(url) => {
+            setPendingLink(null);
+            window.open(url, '_blank', 'noopener,noreferrer');
+          }}
+          onCancel={() => setPendingLink(null)}
+        />
       )}
 
       <style>{`

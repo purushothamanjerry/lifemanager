@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { linksApi } from '../utils/api.js';
+import ConfirmLinkModal from '../components/ConfirmLinkModal.jsx';
 import './Links.css';
 
 const SOURCE_OPTIONS = [
@@ -182,6 +183,7 @@ export default function Links() {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingLink, setEditingLink] = useState(null);
+  const [confirmingLink, setConfirmingLink] = useState(null);
 
   const loadLinks = async () => {
     try {
@@ -284,7 +286,7 @@ export default function Links() {
                 key={item._id}
                 className="link-card"
                 style={{ '--accent-color': meta.color }}
-                onClick={() => handleOpenLink(item.url)}
+                onClick={() => setConfirmingLink(item)}
               >
                 <div className="link-card-glow" />
                 
@@ -345,6 +347,19 @@ export default function Links() {
           onCancel={() => { setModalOpen(false); setEditingLink(null); }}
         />
       )}
+
+      {/* Link Click Confirmation Modal */}
+      {confirmingLink && (
+        <ConfirmLinkModal
+          link={confirmingLink}
+          onConfirm={(url) => {
+            setConfirmingLink(null);
+            handleOpenLink(url);
+          }}
+          onCancel={() => setConfirmingLink(null)}
+        />
+      )}
     </div>
   );
 }
+
