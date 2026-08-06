@@ -7,7 +7,6 @@ const NAV = [
   { path: '/relationships', icon: '◎',  label: 'Relationships' },
   { path: '/notes',         icon: '✦',  label: 'Notes'         },
   { path: '/memories',      icon: '◈',  label: 'Memories'      },
-  { path: '/health',        icon: '♡',  label: 'Health'        },
   { path: '/links',         icon: '🔗', label: 'Links'         },
 ];
 

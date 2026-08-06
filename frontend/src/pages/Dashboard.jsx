@@ -9,7 +9,6 @@ const MODULES = [
   { path:'/relationships', icon:'◎', label:'Relationships', color:'var(--rose)',   desc:'People & bonds'     },
   { path:'/notes',         icon:'✦', label:'Notes',         color:'var(--teal)',   desc:'Thoughts & ideas'   },
   { path:'/memories',      icon:'◈', label:'Memories',      color:'var(--violet)', desc:'Precious moments'   },
-  { path:'/health',        icon:'♡', label:'Health',        color:'var(--rose)',   desc:'Body & wellness'    },
   { path:'/links',         icon:'🔗', label:'Links',         color:'var(--violet)', desc:'Bookmarks & links'  },
   { path:'/timeline',      icon:'⊞', label:'Timeline',      color:'var(--blue)',   desc:'Life events'        },
 ];
@@ -33,6 +32,7 @@ function getInitials(n) { return n.split(' ').map(x=>x[0]).join('').toUpperCase(
 
 function getUpcomingBirthdays(people) {
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
   const results = [];
   for (const p of people) {
     if (!p.dateOfBirth) continue;

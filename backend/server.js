@@ -42,7 +42,6 @@ app.use('/api/conversations', require('./routes/conversations'));
 app.use('/api/notes', require('./routes/notes'));
 app.use('/api/memories', require('./routes/memories'));
 app.use('/api/profile', require('./routes/profile'));
-app.use('/api/health', require('./routes/health'));
 app.use('/api/links', require('./routes/links'));
 
 // Server ping

@@ -7,7 +7,6 @@ async function seedData() {
   const Link = require('./models/Link');
   const Note = require('./models/Note');
   const Memory = require('./models/Memory');
-  const HealthLog = require('./models/HealthLog');
 
   console.log('🌱 Seeding mock database...');
 
@@ -148,47 +147,7 @@ async function seedData() {
   ];
   await Memory.create(memoriesData);
 
-  // 6. Seed HealthLogs
-  const todayStr = new Date().toISOString().split('T')[0];
-  const yesterdayStr = new Date(Date.now() - 24 * 3600 * 1000).toISOString().split('T')[0];
-  
-  const healthData = [
-    {
-      date: todayStr,
-      weight: 72.5,
-      sleepHours: 7.5,
-      sleepQuality: 'good',
-      bedTime: '23:30',
-      wakeTime: '07:00',
-      workout: true,
-      workoutType: 'Running',
-      workoutMins: 35,
-      steps: 10500,
-      waterLiters: 2.2,
-      mood: 'good',
-      energy: 'high',
-      notes: 'Felt very productive today. Running in the morning helped.',
-      food: [
-        { mealType: 'breakfast', foodName: 'Oatmeal with banana', calories: 350, quantity: 1, unit: 'bowl' },
-        { mealType: 'lunch', foodName: 'Grilled Chicken Salad', calories: 520, quantity: 1, unit: 'plate' }
-      ]
-    },
-    {
-      date: yesterdayStr,
-      weight: 72.6,
-      sleepHours: 6.5,
-      sleepQuality: 'fair',
-      bedTime: '00:15',
-      wakeTime: '06:45',
-      workout: false,
-      steps: 4500,
-      waterLiters: 1.5,
-      mood: 'okay',
-      energy: 'medium',
-      notes: 'Stayed up late watching a movie. Sluggish in the afternoon.'
-    }
-  ];
-  await HealthLog.create(healthData);
+
   
   console.log('🌱 Database seeded successfully!');
 }
